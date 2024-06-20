@@ -27,5 +27,5 @@ public class ViewStatsDto {
      * <p>
      * example: 6
      */
-    private Integer hits;
+    private Long hits;
 }

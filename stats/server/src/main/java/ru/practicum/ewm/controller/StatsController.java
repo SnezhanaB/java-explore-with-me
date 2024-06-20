@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.EndpointHitDto;
 import ru.practicum.ewm.dto.ViewStatsDto;
 import ru.practicum.ewm.dto.ViewsStatsRequest;
+import ru.practicum.ewm.service.StatsService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,10 +19,13 @@ import java.util.List;
 @RequestMapping()
 public class StatsController {
 
+    private final StatsService statsService;
+
     @PostMapping("/hit")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void hit(@RequestBody EndpointHitDto hit) {
         log.info("POST /hit request=({})", hit);
+        statsService.addHit(hit);
     }
 
     @GetMapping("/stats")
@@ -39,7 +43,7 @@ public class StatsController {
 
         log.info("GET /stats request=({})", request);
 
-        return null;
+        return statsService.viewStats(request);
     }
 
 }
