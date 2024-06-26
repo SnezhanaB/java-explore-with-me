@@ -1,6 +1,7 @@
 package ru.practicum.ewm;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -13,14 +14,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("unused")
+/**
+ * Клиент для сервиса статистики
+ * <p>
+ * Для использования в своем приложении в application.properties
+ * необходимо объявить stats.server.url
+ */
 @Service
 public class StatsClient extends BaseClient {
 
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
-    public StatsClient(String serverUrl, RestTemplateBuilder builder) {
+    public StatsClient(@Value("${stats.server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new)
                 .build());

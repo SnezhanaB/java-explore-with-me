@@ -30,6 +30,7 @@ services:
     container_name: ewm-service
     ports:
       - "8080:8080"
+      - "8081:8081"
     depends_on:
       - stats-server
       - ewm-db
@@ -38,6 +39,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=test
       - SPRING_DATASOURCE_PASSWORD=test
       - STATS_SERVER_URL=http://server:9090
+      - SERVER_APPLICATION_NAME=ewm-service
 
   ewm-db:
     image: postgres:16.1-alpine
