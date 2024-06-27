@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NewUserDto {
+public class NewUserRequest {
     /**
      * Имя
      * <p>
