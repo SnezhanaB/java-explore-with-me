@@ -1,53 +1,41 @@
 package ru.practicum.ewm.dto;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.ewm.model.enums.EventStatus;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 
 /**
- * Полная информация о событии
+ * Новое событие
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EventFullDto {
-    /**
-     * Идентификатор
-     */
-    private Integer id;
-
+public class NewEventDto {
     /**
      * Краткое описание
      * <p>
      * example: "Эксклюзивность нашего шоу гарантирует привлечение
      * максимальной зрительской аудитории"
      */
+    @NotBlank
+    @Length(max = 2000, min = 20)
     private String annotation;
 
     /**
-     * Категория
+     * Идентификатор категории к которой относится событие
      */
-    private CategoryDto category;
-
-    /**
-     * Количество одобренных заявок на участие в данном событии
-     */
-    private Integer confirmedRequests;
-
-    /**
-     * Дата и время создания события (в формате \"yyyy-MM-dd HH:mm:ss\")
-     * <p>
-     * example: "2022-09-06 11:00:23"
-     */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createdOn;
+    @NotNull
+    private Integer category;
 
     /**
      * Полное описание события
@@ -57,6 +45,7 @@ public class EventFullDto {
      * и воплотили в жизнь инновационный проект, предлагающий
      * свежий взгляд на развлечения..."
      */
+    @Length(max = 7000, min = 20)
     private String description;
 
     /**
@@ -68,13 +57,10 @@ public class EventFullDto {
     private LocalDateTime eventDate;
 
     /**
-     * Инициатор
-     */
-    private UserShortDto initiator;
-
-    /**
      * Широта и долгота места проведения события
      */
+    @NotNull
+    @Valid
     private LocationDto location;
 
     /**
@@ -86,6 +72,7 @@ public class EventFullDto {
      * Ограничение на количество участников.
      * Значение 0 - означает отсутствие ограничения
      */
+    @PositiveOrZero
     private Integer participantLimit;
 
     /**
@@ -102,19 +89,11 @@ public class EventFullDto {
     private Boolean requestModeration;
 
     /**
-     * Список состояний жизненного цикла события
-     */
-    private EventStatus state;
-
-    /**
      * Заголовок
      * <p>
      * example: "Знаменитое шоу 'Летающая кукуруза'"
      */
+    @NotNull
+    @Length(min = 3, max = 120)
     private String title;
-
-    /**
-     * Количество просмотрев события
-     */
-    private Integer views;
 }
