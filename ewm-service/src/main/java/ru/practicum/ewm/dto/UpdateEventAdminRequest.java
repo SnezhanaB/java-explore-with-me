@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.ewm.model.enums.EventAdminState;
-import ru.practicum.ewm.model.enums.EventUserState;
 
 import javax.validation.Valid;
 import javax.validation.constraints.PositiveOrZero;
