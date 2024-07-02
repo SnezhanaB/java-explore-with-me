@@ -8,7 +8,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.NewUserRequest;
 import ru.practicum.ewm.dto.UserDto;
-import ru.practicum.ewm.utils.ChunkRequest;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -39,9 +38,9 @@ public class UserController {
                                   @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
                                   @RequestParam(defaultValue = "10") @Positive Integer size) {
         log.info("[GET /admin/users] Получение списка пользователей, ids={}, from={}, size={}", ids, from, size);
-        Pageable page = new ChunkRequest(from, size, null);
 
         // TODO
+        // Pageable page = new ChunkRequest(from, size, null);
         return Collections.emptyList();
     }
 
