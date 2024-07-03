@@ -14,6 +14,11 @@ import javax.validation.constraints.PositiveOrZero;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Admin: Пользователи
+ * <p>
+ * API для работы с пользователями
+ */
 @Slf4j
 @Validated
 @RestController
