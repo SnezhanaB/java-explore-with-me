@@ -35,7 +35,7 @@ public class PrivateEventController {
      * список
      */
     @GetMapping
-    public List<EventShortDto> getAllEvents(@PathVariable(value = "userId") @Min(1) Long userId,
+    public List<EventShortDto> getAllEvents(@PathVariable(value = "userId") @Min(1) Integer userId,
                                             @RequestParam(value = "from", defaultValue = "0")
                                             @PositiveOrZero Integer from,
                                             @RequestParam(value = "size", defaultValue = "10")
@@ -56,7 +56,7 @@ public class PrivateEventController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EventFullDto addEvent(@PathVariable(value = "userId") @Min(1) Long userId,
+    public EventFullDto addEvent(@PathVariable(value = "userId") @Min(1) Integer userId,
                                  @RequestBody @Valid NewEventDto eventDto) {
         log.info("[POST /users/{}/events] запрос на создание события {}", userId, eventDto);
         // TODO
@@ -72,8 +72,8 @@ public class PrivateEventController {
      * @return найденное событие
      */
     @GetMapping("/{eventId}")
-    public EventFullDto getFullEventByOwner(@PathVariable(value = "userId") @Min(1) Long userId,
-                                            @PathVariable(value = "eventId") @Min(1) Long eventId) {
+    public EventFullDto getFullEventByOwner(@PathVariable(value = "userId") @Min(1) Integer userId,
+                                            @PathVariable(value = "eventId") @Min(1) Integer eventId) {
         log.info("[GET /users/{}/events/{}] получение полной информации о событии " +
                         "добавленном текущим пользователем", userId, eventId);
         // TODO
@@ -88,8 +88,8 @@ public class PrivateEventController {
      * @return обновленное событие
      */
     @PatchMapping("/{eventId}")
-    public EventFullDto updateEventByOwner(@PathVariable(value = "userId") @Min(0) Long userId,
-                                           @PathVariable(value = "eventId") @Min(0) Long eventId,
+    public EventFullDto updateEventByOwner(@PathVariable(value = "userId") @Min(0) Integer userId,
+                                           @PathVariable(value = "eventId") @Min(0) Integer eventId,
                                            @RequestBody @Valid UpdateEventUserRequest userRequest) {
         log.info("[PATCH /users/{}/events/{}] обновление события {}", userId, eventId, userRequest);
         // TODO
@@ -103,8 +103,8 @@ public class PrivateEventController {
      * @return Заявка на участие в событии
      */
     @GetMapping("/{eventId}/requests")
-    public List<ParticipationRequestDto> getAllRequestByEventFromOwner(@PathVariable(value = "userId") @Min(1) Long userId,
-                                                                       @PathVariable(value = "eventId") @Min(1) Long eventId) {
+    public List<ParticipationRequestDto> getAllRequestByEventFromOwner(@PathVariable(value = "userId") @Min(1) Integer userId,
+                                                                       @PathVariable(value = "eventId") @Min(1) Integer eventId) {
         log.info("[GET /users/{}/events/{}/requests] " +
                 "запрос на получение информации о всех запросах об участии " +
                 "в событии для пользователя", userId, eventId);
@@ -132,8 +132,8 @@ public class PrivateEventController {
      */
     @PatchMapping("/{eventId}/requests")
     public EventRequestStatusUpdateResult updateStatusRequestFromOwner(
-            @PathVariable(value = "userId") @Min(1) Long userId,
-            @PathVariable(value = "eventId") @Min(1) Long eventId,
+            @PathVariable(value = "userId") @Min(1) Integer userId,
+            @PathVariable(value = "eventId") @Min(1) Integer eventId,
             @RequestBody EventRequestStatusUpdateRequest updateRequest) {
         log.info("[PATCH /users/{}/events/{}/requests] " +
                 "обновление статуса события от пользователя {}", userId, eventId, updateRequest);

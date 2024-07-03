@@ -43,7 +43,7 @@ public class AdminCompilationController {
      */
     @PatchMapping("/{compId}")
     public CompilationDto updateCompilation(@RequestBody @Valid NewCompilationDto updateDto,
-                                            @PathVariable Long compId) {
+                                            @PathVariable Integer compId) {
         log.info("[PATCH /admin/compilations/{}] обновление подборки событий {}", compId, updateDto);
         // TODO
         return null;
@@ -55,7 +55,7 @@ public class AdminCompilationController {
      */
     @DeleteMapping("/{compId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCompilation(@PathVariable Long compId) {
+    public void deleteCompilation(@PathVariable Integer compId) {
         log.info("[DELETE /admin/compilations/{}] удаление подборки событий", compId);
         // TODO
     }
