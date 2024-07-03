@@ -52,7 +52,6 @@ public class PrivateRequestController {
         return null;
     }
 
-
     /**
      * Отмена своего запроса на участие в событии
      * @param userId идентификатор пользователя
