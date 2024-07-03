@@ -92,7 +92,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private void checkForUniqueName(String name) {
-        if(repository.existsByNameIgnoreCase(name)) {
+        if (repository.existsByNameIgnoreCase(name)) {
             throw new ConflictException("Category with name=" + name + " already exists.");
         }
     }
