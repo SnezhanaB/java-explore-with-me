@@ -8,7 +8,7 @@ public class ChunkRequest implements Pageable {
     private final int limit;
 
     // this attribute can be let out if you don't need it
-    private Sort sort;
+    private Sort sort = Sort.by(Sort.Direction.ASC, "id");
 
     public ChunkRequest(int offset, int limit, Sort sort) {
         if (offset < 0)
@@ -23,6 +23,10 @@ public class ChunkRequest implements Pageable {
         if (sort != null) {
             this.sort = sort;
         }
+    }
+
+    public ChunkRequest(int offset, int limit) {
+        this(offset, limit, null);
     }
 
     @Override

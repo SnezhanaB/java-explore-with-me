@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping(path = "/categories")
 public class PublicCategoryController {
 
-    private CategoryService service;
+    private final CategoryService service;
 
     /**
      * Получение категорий

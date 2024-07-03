@@ -1,5 +1,6 @@
 package ru.practicum.ewm.service;
 
+import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.CategoryDto;
 import ru.practicum.ewm.dto.NewCategoryDto;
 
@@ -8,6 +9,7 @@ import java.util.List;
 /**
  * Сервис для работы с категориями
  */
+@Service
 public interface CategoryService {
 
     /**

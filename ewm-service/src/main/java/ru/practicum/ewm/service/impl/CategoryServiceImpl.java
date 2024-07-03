@@ -76,7 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public List<CategoryDto> getCategories(Integer from, Integer size) {
-        Pageable page = new ChunkRequest(from, size, null);
+        Pageable page = new ChunkRequest(from, size);
         return repository.findAll(page).map(this::toDto).toList();
     }
 

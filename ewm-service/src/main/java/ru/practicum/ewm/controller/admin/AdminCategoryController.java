@@ -24,7 +24,7 @@ import javax.validation.constraints.Positive;
 @RequestMapping(path = "/admin/categories")
 public class AdminCategoryController {
 
-    private CategoryService service;
+    private final CategoryService service;
 
     /**
      * Добавление новой категории
