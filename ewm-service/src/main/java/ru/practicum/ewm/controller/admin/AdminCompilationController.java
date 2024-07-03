@@ -9,6 +9,7 @@ import ru.practicum.ewm.dto.CompilationDto;
 import ru.practicum.ewm.dto.NewCompilationDto;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
 /**
  * Admin: Подборки событий
@@ -55,7 +56,7 @@ public class AdminCompilationController {
      */
     @DeleteMapping("/{compId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCompilation(@PathVariable Integer compId) {
+    public void deleteCompilation(@PathVariable @Positive Integer compId) {
         log.info("[DELETE /admin/compilations/{}] удаление подборки событий", compId);
         // TODO
     }

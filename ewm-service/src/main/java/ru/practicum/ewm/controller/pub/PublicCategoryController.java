@@ -45,7 +45,7 @@ public class PublicCategoryController {
      * @return категория
      */
     @GetMapping("/{catId}")
-    public CategoryDto getCategory(@PathVariable Long catId) {
+    public CategoryDto getCategory(@PathVariable Integer catId) {
         log.info("[GET /categories/{}] получение информации о категории по её идентификатору", catId);
         // TODO
         return null;

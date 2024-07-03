@@ -9,7 +9,7 @@ import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.dto.UpdateEventAdminRequest;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class AdminEventController {
      * @return обновленное событие
      */
     @PatchMapping("/{eventId}")
-    public EventFullDto updateEventByAdmin(@PathVariable(value = "eventId") @Min(1) Integer eventId,
+    public EventFullDto updateEventByAdmin(@PathVariable(value = "eventId") @Positive Integer eventId,
                                            @RequestBody @Valid UpdateEventAdminRequest request) {
         log.info("[PATCH /admin/events/{}] редактирование данных события {}", eventId, request);
         // TODO

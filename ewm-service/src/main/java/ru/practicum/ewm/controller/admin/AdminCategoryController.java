@@ -9,7 +9,7 @@ import ru.practicum.ewm.dto.CategoryDto;
 import ru.practicum.ewm.dto.NewCategoryDto;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 
 /**
  * Admin: Категории
@@ -42,11 +42,11 @@ public class AdminCategoryController {
      * Удаление категории
      * <p>
      * Обратите внимание: с категорией не должно быть связано ни одного события
-     * @param catId
+     * @param catId id категории
      */
     @DeleteMapping("/{catId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable @Min(1) Integer catId) {
+    public void deleteCategory(@PathVariable @Positive Integer catId) {
         log.info("[DELETE /admin/categories/{}] удалении категории", catId);
         // TODO
     }
@@ -60,7 +60,7 @@ public class AdminCategoryController {
      * @return обновленная категория
      */
     @PatchMapping("/{catId}")
-    public CategoryDto updateCategory(@PathVariable(value = "catId") @Min(1) Integer catId,
+    public CategoryDto updateCategory(@PathVariable(value = "catId") @Positive Integer catId,
                                       @RequestBody @Valid CategoryDto categoryDto) {
         log.info("[PATCH /admin/categories/{}] обновление категории {}", catId, categoryDto);
         // TODO

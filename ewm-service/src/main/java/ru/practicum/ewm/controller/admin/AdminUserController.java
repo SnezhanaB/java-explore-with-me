@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/admin/users")
-public class UserController {
+public class AdminUserController {
 
     /**
      * Получение списка пользователей
@@ -68,7 +68,7 @@ public class UserController {
      */
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable Integer userId) {
+    public void deleteUser(@PathVariable @Positive Integer userId) {
         log.info("[DELETE /admin/users] Удаление пользователя с id={}", userId);
         // TODO
     }

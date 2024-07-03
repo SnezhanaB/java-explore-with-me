@@ -7,7 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.ParticipationRequestDto;
 
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 /**
@@ -30,7 +30,7 @@ public class PrivateRequestController {
      * @return список заявок на участие в событии
      */
     @GetMapping
-    public List<ParticipationRequestDto> getAllRequests(@PathVariable(value = "userId") @Min(0) Integer userId) {
+    public List<ParticipationRequestDto> getAllRequests(@PathVariable(value = "userId") @Positive Integer userId) {
         log.info("[GET /users/{}/requests] получение информации о заявках текущего пользователя на участие в чужих " +
                 "событиях", userId);
         // TODO
@@ -45,8 +45,8 @@ public class PrivateRequestController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ParticipationRequestDto addRequest(@PathVariable(value = "userId") @Min(0) Integer userId,
-                                              @RequestParam(name = "eventId") @Min(0) Integer eventId) {
+    public ParticipationRequestDto addRequest(@PathVariable(value = "userId") @Positive Integer userId,
+                                              @RequestParam(name = "eventId") @Positive Integer eventId) {
         log.info("[POST /users/{}/requests] запрос на участие в событии c id={}", eventId, userId);
         // TODO
         return null;
@@ -59,8 +59,8 @@ public class PrivateRequestController {
      * @return Заявка на участие в событии
      */
     @PatchMapping("/{requestId}/cancel")
-    public ParticipationRequestDto cancelRequest(@PathVariable(value = "userId") @Min(0) Integer userId,
-                                                   @PathVariable(value = "requestId") @Min(0) Integer requestId) {
+    public ParticipationRequestDto cancelRequest(@PathVariable(value = "userId") @Positive Integer userId,
+                                                   @PathVariable(value = "requestId") @Positive Integer requestId) {
         log.info("[PATCH /users/{}/requests/{}/cancel] отмена запроса пользователем", userId, requestId);
         // TODO
         return null;
