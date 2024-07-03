@@ -18,7 +18,7 @@ public class ParticipationRequestDto {
     /**
      * Идентификатор
      */
-    private Integer id;
+    private Long id;
 
     /**
      * Дата и время создания заявки
@@ -29,12 +29,12 @@ public class ParticipationRequestDto {
     /**
      * Идентификатор события
      */
-    private Integer event;
+    private Long event;
 
     /**
      * Идентификатор пользователя, отправившего заявку
      */
-    private Integer requester;
+    private Long requester;
 
     /**
      * Статус заявки

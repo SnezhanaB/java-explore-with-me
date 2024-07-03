@@ -20,7 +20,7 @@ public class EventShortDto {
     /**
      * Идентификатор
      */
-    private Integer id;
+    private Long id;
 
     /**
      * Краткое описание

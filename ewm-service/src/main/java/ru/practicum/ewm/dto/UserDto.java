@@ -16,7 +16,7 @@ public class UserDto {
     /**
      * Идентификатор
      */
-    private Integer id;
+    private Long id;
     /**
      * Имя
      * <p>

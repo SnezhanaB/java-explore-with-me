@@ -16,7 +16,7 @@ public class UserShortDto {
     /**
      * Идентификатор
      */
-    private Integer id;
+    private Long id;
     /**
      * Имя
      * <p>

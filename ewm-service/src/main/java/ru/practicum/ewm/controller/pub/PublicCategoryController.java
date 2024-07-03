@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.CategoryDto;
+import ru.practicum.ewm.service.CategoryService;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,6 +23,8 @@ import java.util.List;
 @RequestMapping(path = "/categories")
 public class PublicCategoryController {
 
+    private CategoryService service;
+
     /**
      * Получение категорий
      * @param from количество категорий, которые нужно пропустить для формирования текущего набора
@@ -35,8 +37,7 @@ public class PublicCategoryController {
     public List<CategoryDto> getCategories(@RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
                                            @RequestParam(defaultValue = "10") @Positive Integer size) {
         log.info("[GET /categories] получение списка категорий");
-        // TODO
-        return Collections.emptyList();
+        return service.getCategories(from, size);
     }
 
     /**
@@ -45,9 +46,8 @@ public class PublicCategoryController {
      * @return категория
      */
     @GetMapping("/{catId}")
-    public CategoryDto getCategory(@PathVariable Integer catId) {
+    public CategoryDto getCategory(@PathVariable Long catId) {
         log.info("[GET /categories/{}] получение информации о категории по её идентификатору", catId);
-        // TODO
-        return null;
+        return service.getCategory(catId);
     }
 }

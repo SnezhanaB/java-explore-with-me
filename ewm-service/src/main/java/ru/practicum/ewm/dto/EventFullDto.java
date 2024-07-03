@@ -21,7 +21,7 @@ public class EventFullDto {
     /**
      * Идентификатор
      */
-    private Integer id;
+    private Long id;
 
     /**
      * Краткое описание

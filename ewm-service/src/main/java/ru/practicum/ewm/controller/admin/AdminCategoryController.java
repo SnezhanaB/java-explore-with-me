@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.CategoryDto;
 import ru.practicum.ewm.dto.NewCategoryDto;
+import ru.practicum.ewm.service.CategoryService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -23,6 +24,8 @@ import javax.validation.constraints.Positive;
 @RequestMapping(path = "/admin/categories")
 public class AdminCategoryController {
 
+    private CategoryService service;
+
     /**
      * Добавление новой категории
      * <p>
@@ -34,8 +37,7 @@ public class AdminCategoryController {
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryDto addCategory(@RequestBody @Valid NewCategoryDto newCategoryDto) {
         log.info("[POST /admin/categories] создание новой категории: {}", newCategoryDto);
-        // TODO
-        return null;
+        return service.addCategory(newCategoryDto);
     }
 
     /**
@@ -46,9 +48,9 @@ public class AdminCategoryController {
      */
     @DeleteMapping("/{catId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable @Positive Integer catId) {
+    public void deleteCategory(@PathVariable @Positive Long catId) {
         log.info("[DELETE /admin/categories/{}] удалении категории", catId);
-        // TODO
+        service.deleteCategory(catId);
     }
 
     /**
@@ -60,10 +62,9 @@ public class AdminCategoryController {
      * @return обновленная категория
      */
     @PatchMapping("/{catId}")
-    public CategoryDto updateCategory(@PathVariable(value = "catId") @Positive Integer catId,
+    public CategoryDto updateCategory(@PathVariable(value = "catId") @Positive Long catId,
                                       @RequestBody @Valid CategoryDto categoryDto) {
         log.info("[PATCH /admin/categories/{}] обновление категории {}", catId, categoryDto);
-        // TODO
-        return null;
+        return service.updateCategory(catId, categoryDto);
     }
 }

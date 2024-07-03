@@ -32,7 +32,7 @@ public class UpdateEventUserRequest {
     /**
      * Новая категория
      */
-    private Integer category;
+    private Long category;
 
     /**
      * Новое описание

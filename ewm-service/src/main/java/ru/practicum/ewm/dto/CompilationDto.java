@@ -17,7 +17,7 @@ public class CompilationDto {
     /**
      * Идентификатор
      */
-    private Integer id;
+    private Long id;
     /**
      * Список событий входящих в подборку
      */
