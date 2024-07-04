@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.dto.EventShortDto;
 import ru.practicum.ewm.dto.UserSearchEventParams;
+import ru.practicum.ewm.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping(path = "/events")
 public class PublicEventController {
+    private final EventService service;
 
     /**
      * Получение событий с возможностью фильтрации
@@ -56,8 +57,7 @@ public class PublicEventController {
     public List<EventShortDto> getAllEvents(@Valid UserSearchEventParams searchEventParams,
                                             HttpServletRequest request) {
         log.info("[GET /events] получение событий с возможностью фильтрации {}", searchEventParams);
-        // TODO
-        return Collections.emptyList();
+        return service.getAllEvents(searchEventParams, request);
     }
 
     /**
@@ -78,11 +78,10 @@ public class PublicEventController {
      * В случае, если события с заданным id не найдено, возвращает статус код 404
      */
     @GetMapping("/{eventId}")
-    public EventFullDto getEventById(@PathVariable(value = "eventId") @Positive Integer eventId,
+    public EventFullDto getEventById(@PathVariable(value = "eventId") @Positive Long eventId,
                                      HttpServletRequest request) {
         log.info("[GET /events/{}] Получение подробной информации об " +
                         "опубликованном событии по его идентификатору", eventId);
-        // TODO
-        return null;
+        return service.getEventById(eventId, request);
     }
 }

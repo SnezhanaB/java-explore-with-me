@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.AdminSearchEventParams;
 import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.dto.UpdateEventAdminRequest;
+import ru.practicum.ewm.service.EventService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,6 +25,8 @@ import java.util.List;
 @RequestMapping(path = "/admin/events")
 public class AdminEventController {
 
+    private final EventService service;
+
     /**
      * Поиск событий админом
      * @param searchEventParams Запрос на поиск события админом
@@ -33,10 +35,9 @@ public class AdminEventController {
      * В случае, если по заданным фильтрам не найдено ни одного события, возвращает пустой список
      */
     @GetMapping
-    public List<EventFullDto> searchEvents(@Valid AdminSearchEventParams searchEventParams) {
+    public List<EventFullDto> searchEventsByAdmin(@Valid AdminSearchEventParams searchEventParams) {
         log.info("[GET /admin/events] поиск события админом {}", searchEventParams);
-        // TODO
-        return Collections.emptyList();
+        return service.searchEventsByAdmin(searchEventParams);
     }
 
     /**
@@ -53,10 +54,9 @@ public class AdminEventController {
      * @return обновленное событие
      */
     @PatchMapping("/{eventId}")
-    public EventFullDto updateEventByAdmin(@PathVariable(value = "eventId") @Positive Integer eventId,
+    public EventFullDto updateEventByAdmin(@PathVariable(value = "eventId") @Positive Long eventId,
                                            @RequestBody @Valid UpdateEventAdminRequest request) {
         log.info("[PATCH /admin/events/{}] редактирование данных события {}", eventId, request);
-        // TODO
-        return null;
+        return service.updateEventByAdmin(eventId, request);
     }
 }

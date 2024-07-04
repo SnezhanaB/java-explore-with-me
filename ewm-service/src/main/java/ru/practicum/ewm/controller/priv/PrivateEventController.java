@@ -6,11 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.*;
+import ru.practicum.ewm.service.EventService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping(path = "/users/{userId}/events")
 public class PrivateEventController {
+    private final EventService service;
 
     /**
      * Получение событий, добавленных текущим пользователем
@@ -34,18 +35,17 @@ public class PrivateEventController {
      * список
      */
     @GetMapping
-    public List<EventShortDto> getAllEvents(@PathVariable(value = "userId") @Positive Integer userId,
+    public List<EventShortDto> getAllEvents(@PathVariable(value = "userId") @Positive Long userId,
                                             @RequestParam(value = "from", defaultValue = "0")
                                             @PositiveOrZero Integer from,
                                             @RequestParam(value = "size", defaultValue = "10")
                                             @Positive Integer size) {
         log.info("[GET /users/{}/events] Получение событий, добавленных текущим пользователем", userId);
-        // TODO
-        return Collections.emptyList();
+        return service.getAllEvents(userId, from, size);
     }
 
     /**
-     * Добавление нового события
+     * Добавление нового события пользователем
      * <p>
      * Обратите внимание: дата и время на которые намечено событие не может быть раньше,
      * чем через два часа от текущего момента
@@ -55,11 +55,10 @@ public class PrivateEventController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EventFullDto addEvent(@PathVariable(value = "userId") @Positive Integer userId,
+    public EventFullDto addEvent(@PathVariable(value = "userId") @Positive Long userId,
                                  @RequestBody @Valid NewEventDto eventDto) {
         log.info("[POST /users/{}/events] запрос на создание события {}", userId, eventDto);
-        // TODO
-        return null;
+        return service.addEvent(userId, eventDto);
     }
 
     /**
@@ -71,12 +70,11 @@ public class PrivateEventController {
      * @return найденное событие
      */
     @GetMapping("/{eventId}")
-    public EventFullDto getFullEventByOwner(@PathVariable(value = "userId") @Positive Integer userId,
-                                            @PathVariable(value = "eventId") @Positive Integer eventId) {
+    public EventFullDto getFullEventByOwner(@PathVariable(value = "userId") @Positive Long userId,
+                                            @PathVariable(value = "eventId") @Positive Long eventId) {
         log.info("[GET /users/{}/events/{}] получение полной информации о событии " +
                         "добавленном текущим пользователем", userId, eventId);
-        // TODO
-        return null;
+        return service.getFullEventByOwner(userId, eventId);
     }
 
     /**
@@ -87,12 +85,11 @@ public class PrivateEventController {
      * @return обновленное событие
      */
     @PatchMapping("/{eventId}")
-    public EventFullDto updateEventByOwner(@PathVariable(value = "userId") @Positive Integer userId,
-                                           @PathVariable(value = "eventId") @Positive Integer eventId,
+    public EventFullDto updateEventByOwner(@PathVariable(value = "userId") @Positive Long userId,
+                                           @PathVariable(value = "eventId") @Positive Long eventId,
                                            @RequestBody @Valid UpdateEventUserRequest userRequest) {
         log.info("[PATCH /users/{}/events/{}] обновление события {}", userId, eventId, userRequest);
-        // TODO
-        return null;
+        return service.updateEventByOwner(userId, eventId, userRequest);
     }
 
     /**
@@ -102,13 +99,12 @@ public class PrivateEventController {
      * @return Заявка на участие в событии
      */
     @GetMapping("/{eventId}/requests")
-    public List<ParticipationRequestDto> getAllRequestByEventFromOwner(@PathVariable(value = "userId") @Positive Integer userId,
-                                                                       @PathVariable(value = "eventId") @Positive Integer eventId) {
+    public List<ParticipationRequestDto> getAllRequestByEventFromOwner(@PathVariable(value = "userId") @Positive Long userId,
+                                                                       @PathVariable(value = "eventId") @Positive Long eventId) {
         log.info("[GET /users/{}/events/{}/requests] " +
                 "запрос на получение информации о всех запросах об участии " +
                 "в событии для пользователя", userId, eventId);
-        // TODO
-        return Collections.emptyList();
+        return service.getAllRequestByEventFromOwner(userId, eventId);
     }
 
     /**
@@ -131,12 +127,11 @@ public class PrivateEventController {
      */
     @PatchMapping("/{eventId}/requests")
     public EventRequestStatusUpdateResult updateStatusRequestFromOwner(
-            @PathVariable(value = "userId") @Positive Integer userId,
-            @PathVariable(value = "eventId") @Positive Integer eventId,
+            @PathVariable(value = "userId") @Positive Long userId,
+            @PathVariable(value = "eventId") @Positive Long eventId,
             @RequestBody EventRequestStatusUpdateRequest updateRequest) {
         log.info("[PATCH /users/{}/events/{}/requests] " +
                 "обновление статуса события от пользователя {}", userId, eventId, updateRequest);
-        // TODO
-        return null;
+        return service.updateStatusRequestFromOwner(userId, eventId, updateRequest);
     }
 }
