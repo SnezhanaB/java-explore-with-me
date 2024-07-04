@@ -7,11 +7,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.NewUserRequest;
 import ru.practicum.ewm.dto.UserDto;
+import ru.practicum.ewm.service.UserService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,6 +26,8 @@ import java.util.List;
 @RequestMapping(path = "/admin/users")
 public class AdminUserController {
 
+    private final UserService service;
+
     /**
      * Получение списка пользователей
      * @param ids пользователей
@@ -38,14 +40,12 @@ public class AdminUserController {
      *  возвращает пустой список
      */
     @GetMapping
-    public List<UserDto> getUsers(@RequestParam(required = false) List<Integer> ids,
+    public List<UserDto> getUsers(@RequestParam(required = false) List<Long> ids,
                                   @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
                                   @RequestParam(defaultValue = "10") @Positive Integer size) {
         log.info("[GET /admin/users] Получение списка пользователей, ids={}, from={}, size={}", ids, from, size);
 
-        // TODO
-        // Pageable page = new ChunkRequest(from, size, null);
-        return Collections.emptyList();
+        return service.getUsers(ids, from, size);
     }
 
     /**
@@ -56,10 +56,8 @@ public class AdminUserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto addUser(@RequestBody @Valid NewUserRequest newUserRequest) {
-
         log.info("[POST /admin/users] Добавление нового пользователя {}", newUserRequest);
-        // TODO
-        return null;
+        return service.addUser(newUserRequest);
     }
 
     /**
@@ -68,8 +66,8 @@ public class AdminUserController {
      */
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable @Positive Integer userId) {
+    public void deleteUser(@PathVariable @Positive Long userId) {
         log.info("[DELETE /admin/users] Удаление пользователя с id={}", userId);
-        // TODO
+        service.deleteUser(userId);
     }
 }
