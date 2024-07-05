@@ -64,8 +64,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkById(Long id) {
-        repository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User with id=" + id + " was not found"));
+        if (!repository.existsById(id)) {
+            throw new NotFoundException("User with id=" + id + " was not found");
+        }
     }
 
     private UserDto toDto(User user) {

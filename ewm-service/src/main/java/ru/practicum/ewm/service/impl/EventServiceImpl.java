@@ -4,14 +4,30 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.*;
+import ru.practicum.ewm.exception.InvalidParametersException;
+import ru.practicum.ewm.exception.NotFoundException;
+import ru.practicum.ewm.model.Category;
+import ru.practicum.ewm.model.Event;
+import ru.practicum.ewm.model.Location;
+import ru.practicum.ewm.model.User;
+import ru.practicum.ewm.model.enums.EventStatus;
+import ru.practicum.ewm.repository.CategoryRepository;
+import ru.practicum.ewm.repository.EventRepository;
+import ru.practicum.ewm.repository.LocationRepository;
+import ru.practicum.ewm.repository.UserRepository;
 import ru.practicum.ewm.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
+    private final EventRepository repository;
+    private final LocationRepository locationRepository;
+    private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
     private final ModelMapper mapper = new ModelMapper();
 
     /**
@@ -72,7 +88,27 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public EventFullDto addEvent(Long userId, NewEventDto eventDto) {
-        return null;
+        LocalDateTime createdOn = LocalDateTime.now();
+        User user = getUserById(userId);
+        checkEventDate(eventDto.getEventDate());
+        Category category = getCategoryById(eventDto.getCategory());
+
+        Event event = toModel(eventDto);
+        event.setCreatedOn(createdOn);
+        event.setInitiator(user);
+        event.setCategory(category);
+        event.setState(EventStatus.PENDING);
+        if(eventDto.getLocation() != null) {
+            Location location = locationRepository.save(toModel(eventDto.getLocation()));
+            event.setLocation(location);
+        }
+
+        Event saved = repository.save(event);
+        EventFullDto fullDto = toFullDto(saved);
+        fullDto.setViews(0);
+        fullDto.setConfirmedRequests(0);
+
+        return fullDto;
     }
 
     /**
@@ -189,4 +225,70 @@ public class EventServiceImpl implements EventService {
     public EventFullDto getEventById(Long eventId, HttpServletRequest request) {
         return null;
     }
+
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("User with id=" + userId + " was not found"));
+    }
+
+    private Category getCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId).orElseThrow(
+                () -> new NotFoundException("Category with id=" + categoryId + " was not found"));
+    }
+
+    private Event getEventById(Long eventId) {
+        return repository.findById(eventId).orElseThrow(
+                () -> new NotFoundException("Event with id=" + eventId + " was not found"));
+    }
+
+    private void checkEventById(Long eventId) {
+        if (!repository.existsById(eventId)) {
+            throw new NotFoundException("Event with id=" + eventId + " was not found");
+        }
+    }
+
+    private void checkCategoryById(Long categoryId) {
+        if (!categoryRepository.existsById(categoryId)) {
+            throw new NotFoundException("Category with id=" + categoryId + " was not found");
+        }
+    }
+
+    /**
+     * Дата и время на которые намечено событие не может быть раньше,
+     * чем через два часа от текущего момента
+      */
+    private void checkEventDate(LocalDateTime dateTime) {
+        if(dateTime.isBefore(LocalDateTime.now().plusHours(2))) {
+            throw new InvalidParametersException("дата и время на которые намечено событие " +
+                    "не может быть раньше, чем через два часа от текущего момента");
+        }
+
+    }
+
+
+    EventFullDto toFullDto(Event event) {
+        return mapper.map(event, EventFullDto.class);
+    }
+
+    EventShortDto toShortDto(Event event) {
+        return mapper.map(event, EventShortDto.class);
+    }
+
+    Event toModel(EventFullDto dto) {
+        return mapper.map(dto, Event.class);
+    }
+
+    Event toModel(EventShortDto dto) {
+        return mapper.map(dto, Event.class);
+    }
+
+    Event toModel(NewEventDto dto) {
+        return mapper.map(dto, Event.class);
+    }
+
+    Location toModel(LocationDto dto) {
+        return mapper.map(dto, Location.class);
+    }
+
 }

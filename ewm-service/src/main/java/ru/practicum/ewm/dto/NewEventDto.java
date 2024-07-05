@@ -28,14 +28,14 @@ public class NewEventDto {
      * максимальной зрительской аудитории"
      */
     @NotBlank
-    @Length(max = 2000, min = 20)
+    @Length(min = 20, max = 2000)
     private String annotation;
 
     /**
      * Идентификатор категории к которой относится событие
      */
     @NotNull
-    private Integer category;
+    private Long category;
 
     /**
      * Полное описание события
@@ -45,7 +45,7 @@ public class NewEventDto {
      * и воплотили в жизнь инновационный проект, предлагающий
      * свежий взгляд на развлечения..."
      */
-    @Length(max = 7000, min = 20)
+    @Length(min = 20, max = 7000)
     private String description;
 
     /**
