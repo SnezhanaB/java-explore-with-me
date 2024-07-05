@@ -98,7 +98,7 @@ public class EventServiceImpl implements EventService {
         event.setInitiator(user);
         event.setCategory(category);
         event.setState(EventStatus.PENDING);
-        if(eventDto.getLocation() != null) {
+        if (eventDto.getLocation() != null) {
             Location location = locationRepository.save(toModel(eventDto.getLocation()));
             event.setLocation(location);
         }
@@ -259,7 +259,7 @@ public class EventServiceImpl implements EventService {
      * чем через два часа от текущего момента
       */
     private void checkEventDate(LocalDateTime dateTime) {
-        if(dateTime.isBefore(LocalDateTime.now().plusHours(2))) {
+        if (dateTime.isBefore(LocalDateTime.now().plusHours(2))) {
             throw new InvalidParametersException("дата и время на которые намечено событие " +
                     "не может быть раньше, чем через два часа от текущего момента");
         }
