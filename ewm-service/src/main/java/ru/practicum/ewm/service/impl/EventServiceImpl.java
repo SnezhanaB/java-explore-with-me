@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.*;
+import ru.practicum.ewm.exception.ConflictException;
 import ru.practicum.ewm.exception.InvalidParametersException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.model.Category;
@@ -135,7 +136,31 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public EventFullDto updateEventByOwner(Long userId, Long eventId, UpdateEventUserRequest userRequest) {
-        return null;
+        checkUserById(userId);
+        Event event = getEventById(eventId);
+        if (event.getState().equals(EventStatus.PUBLISHED)){
+            throw new ConflictException("Only pending or canceled events can be changed");
+        }
+        if (!event.getInitiator().getId().equals(userId)) {
+            throw new ConflictException("Only creator can change event");
+        }
+        boolean hasChanges = updateEventByDto(event, userRequest);
+        if (isNotNull(userRequest.getStateAction())) {
+            switch (userRequest.getStateAction()) {
+                case SEND_TO_REVIEW:
+                    event.setState(EventStatus.PENDING);
+                    hasChanges = true;
+                    break;
+                case CANCEL_REVIEW:
+                    event.setState(EventStatus.CANCELED);
+                    hasChanges = true;
+                    break;
+            }
+        }
+        if (hasChanges) {
+            return toFullDto(repository.save(event));
+        }
+        return toFullDto(event);
     }
 
     /**
@@ -223,9 +248,57 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public EventFullDto getEventById(Long eventId, HttpServletRequest request) {
-        return null;
+        Event event = getEventById(eventId);
+        if (!event.getState().equals(EventStatus.PUBLISHED)) {
+            throw new NotFoundException("Event with id = " + eventId + " not published");
+        }
+        // TODO add stats
+        return toFullDto(event);
     }
 
+    private boolean updateEventByDto(Event model, UpdateEventRequest dto) {
+        boolean hasChanges = false;
+        if (isNotBlank(dto.getAnnotation())) {
+            model.setAnnotation(dto.getAnnotation());
+            hasChanges = true;
+        }
+        if (isNotBlank(dto.getDescription())) {
+            model.setDescription(dto.getDescription());
+            hasChanges = true;
+        }
+        if (isNotNull(dto.getEventDate())) {
+            checkEventDate(dto.getEventDate());
+            model.setEventDate(dto.getEventDate());
+            hasChanges = true;
+        }
+        if (isNotBlank(dto.getTitle())) {
+            model.setTitle(dto.getTitle());
+            hasChanges = true;
+        }
+        if (isNotNull(dto.getCategory())) {
+            Category category = getCategoryById(dto.getCategory());
+            model.setCategory(category);
+            hasChanges = true;
+        }
+        if (isNotNull(dto.getLocation())) {
+            Location location = toModel(dto.getLocation());
+            model.setLocation(location);
+            hasChanges = true;
+        }
+        if (isNotNull(dto.getParticipantLimit())) {
+            model.setParticipantLimit(dto.getParticipantLimit());
+            hasChanges = true;
+        }
+        if (isNotNull(dto.getRequestModeration())) {
+            model.setRequestModeration(dto.getRequestModeration());
+            hasChanges = true;
+        }
+        if (isNotNull(dto.getPaid())) {
+            model.setPaid(dto.getPaid());
+            hasChanges = true;
+        }
+        return hasChanges;
+    }
 
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(
@@ -254,6 +327,12 @@ public class EventServiceImpl implements EventService {
         }
     }
 
+    private void checkUserById(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new NotFoundException("User with id=" + userId + " was not found");
+        }
+    }
+
     /**
      * Дата и время на которые намечено событие не может быть раньше,
      * чем через два часа от текущего момента
@@ -265,7 +344,6 @@ public class EventServiceImpl implements EventService {
         }
 
     }
-
 
     EventFullDto toFullDto(Event event) {
         return mapper.map(event, EventFullDto.class);
@@ -289,6 +367,14 @@ public class EventServiceImpl implements EventService {
 
     Location toModel(LocationDto dto) {
         return mapper.map(dto, Location.class);
+    }
+
+    boolean isNotNull(Object o) {
+        return o != null;
+    }
+
+    boolean isNotBlank(String s) {
+        return s != null && !s.isBlank();
     }
 
 }
