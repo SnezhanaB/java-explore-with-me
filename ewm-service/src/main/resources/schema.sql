@@ -40,6 +40,6 @@ CREATE TABLE IF NOT EXISTS events
     title               VARCHAR(120) NOT NULL,
     CONSTRAINT          fk_event_to_user     FOREIGN KEY (initiator_id) REFERENCES users (id),
     CONSTRAINT          fk_event_to_category FOREIGN KEY (category_id) REFERENCES categories (id),
-    CONSTRAINT          fk_event_to_location FOREIGN KEY (location_id) REFERENCES location (id)
+    CONSTRAINT          fk_event_to_location FOREIGN KEY (location_id) REFERENCES locations (id)
 );
 
