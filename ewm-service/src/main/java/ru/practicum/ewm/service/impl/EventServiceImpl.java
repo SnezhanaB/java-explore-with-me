@@ -138,7 +138,7 @@ public class EventServiceImpl implements EventService {
     public EventFullDto updateEventByOwner(Long userId, Long eventId, UpdateEventUserRequest userRequest) {
         checkUserById(userId);
         Event event = getEventById(eventId);
-        if (event.getState().equals(EventStatus.PUBLISHED)){
+        if (event.getState().equals(EventStatus.PUBLISHED)) {
             throw new ConflictException("Only pending or canceled events can be changed");
         }
         if (!event.getInitiator().getId().equals(userId)) {
