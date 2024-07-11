@@ -21,7 +21,7 @@ public class AdminSearchEventParams {
     /**
      * Список id пользователей, чьи события нужно найти
      */
-    private List<Integer> users;
+    private List<Long> users;
 
     /**
      * Список состояний в которых находятся искомые события
@@ -31,7 +31,7 @@ public class AdminSearchEventParams {
     /**
      * Список id категорий в которых будет вестись поиск
      */
-    private List<Integer> categories;
+    private List<Long> categories;
 
     /**
      * Дата и время не раньше которых должно произойти событие

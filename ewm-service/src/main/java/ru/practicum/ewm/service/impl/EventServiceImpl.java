@@ -2,6 +2,8 @@ package ru.practicum.ewm.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.*;
 import ru.practicum.ewm.exception.ConflictException;
@@ -17,6 +19,7 @@ import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.repository.LocationRepository;
 import ru.practicum.ewm.repository.UserRepository;
 import ru.practicum.ewm.service.EventService;
+import ru.practicum.ewm.utils.ChunkRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -41,7 +44,39 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<EventFullDto> searchEventsByAdmin(AdminSearchEventParams searchEventParams) {
-        return List.of();
+        Pageable page = new ChunkRequest(searchEventParams.getFrom(), searchEventParams.getSize());
+        Specification<Event> specification = Specification.where(null);
+
+        List<Long> users = searchEventParams.getUsers();
+        List<String> states = searchEventParams.getStates();
+        List<Long> categories = searchEventParams.getCategories();
+        LocalDateTime rangeEnd = searchEventParams.getRangeEnd();
+        LocalDateTime rangeStart = searchEventParams.getRangeStart();
+
+        if (isNotEmpty(users)) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    root.get("initiator").get("id").in(users));
+        }
+        if (isNotEmpty(states)) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    root.get("eventStatus").as(String.class).in(states));
+        }
+        if (isNotEmpty(categories)) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    root.get("category").get("id").in(categories));
+        }
+        if (rangeEnd != null) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.lessThanOrEqualTo(root.get("eventDate"), rangeEnd));
+        }
+        if (rangeStart != null) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.greaterThanOrEqualTo(root.get("eventDate"), rangeStart));
+        }
+
+        List<EventFullDto> result = repository.findAll(specification, page).map(this::toFullDto).toList();
+        // TODO event.setConfirmedRequests
+        return result;
     }
 
     /**
@@ -60,7 +95,26 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public EventFullDto updateEventByAdmin(Long eventId, UpdateEventAdminRequest request) {
-        return null;
+        Event event = getEventById(eventId);
+        if (event.getState().equals(EventStatus.PUBLISHED) || event.getState().equals(EventStatus.CANCELED)) {
+            throw new ConflictException("Only pending events can be changed");
+        }
+        boolean hasChanges = updateEventByDto(event, request);
+        if (isNotNull(request.getStateAction())) {
+            switch (request.getStateAction()) {
+                case PUBLISH_EVENT:
+                    event.setState(EventStatus.PUBLISHED);
+                    break;
+                case REJECT_EVENT:
+                    event.setState(EventStatus.CANCELED);
+                    break;
+            }
+            hasChanges = true;
+        }
+        if (hasChanges) {
+            return toFullDto(repository.save(event));
+        }
+        return toFullDto(event);
     }
 
     /**
@@ -74,7 +128,10 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<EventShortDto> getAllEvents(Long userId, Integer from, Integer size) {
-        return List.of();
+        checkUserById(userId);
+        Pageable page = new ChunkRequest(from, size);
+
+        return repository.findAll(page).map(this::toShortDto).toList();
     }
 
     /**
@@ -123,7 +180,11 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public EventFullDto getFullEventByOwner(Long userId, Long eventId) {
-        return null;
+        checkUserById(userId);
+        Event event = repository.findByInitiatorIdAndId(userId, eventId).orElseThrow(
+                () -> new NotFoundException("Event with id=" + eventId + " and created by user with id = " + userId +
+                        " not found"));
+        return toFullDto(event);
     }
 
     /**
@@ -371,6 +432,10 @@ public class EventServiceImpl implements EventService {
 
     boolean isNotNull(Object o) {
         return o != null;
+    }
+
+    boolean isNotEmpty(List list) {
+        return list != null && !list.isEmpty();
     }
 
     boolean isNotBlank(String s) {
