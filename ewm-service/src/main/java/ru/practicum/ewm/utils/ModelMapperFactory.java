@@ -23,6 +23,10 @@ public class ModelMapperFactory {
                 mapper -> mapper.map(request -> request.getRequester().getId(),
                 ParticipationRequestDto::setRequester)
         );
+        requestDtoTypeMap.addMappings(
+                mapper -> mapper.map(request -> request.getEvent().getId(),
+                        ParticipationRequestDto::setEvent)
+        );
 
         return modelMapper;
     }
