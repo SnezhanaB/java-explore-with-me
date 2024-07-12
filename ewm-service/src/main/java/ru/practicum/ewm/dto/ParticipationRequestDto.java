@@ -29,12 +29,12 @@ public class ParticipationRequestDto {
     /**
      * Идентификатор события
      */
-    private Long event;
+    private Long eventId;
 
     /**
      * Идентификатор пользователя, отправившего заявку
      */
-    private Long requester;
+    private Long requesterId;
 
     /**
      * Статус заявки
