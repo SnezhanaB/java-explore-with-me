@@ -23,7 +23,7 @@ public class NewUserRequest {
      * example: "Петров Иван"
      */
     @NotBlank
-    @Size(min = 2, max = 255)
+    @Size(min = 2, max = 250)
     private String name;
     /**
      * Адрес электронной почты
@@ -32,6 +32,6 @@ public class NewUserRequest {
      */
     @NotBlank
     @Email
-    @Size(min = 2, max = 255)
+    @Size(min = 6, max = 254)
     private String email;
 }

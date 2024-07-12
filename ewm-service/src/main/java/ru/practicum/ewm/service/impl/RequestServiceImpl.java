@@ -94,6 +94,12 @@ public class RequestServiceImpl implements RequestService {
             request.setStatus(RequestStatus.CONFIRMED);
         }
 
+        // При добавлении запроса на участие при participantLimit == 0
+        // должен быть статус CONFIRMED
+        if (event.getParticipantLimit() == 0) {
+            request.setStatus(RequestStatus.CONFIRMED);
+        }
+
         return toDto(repository.save(request));
     }
 
