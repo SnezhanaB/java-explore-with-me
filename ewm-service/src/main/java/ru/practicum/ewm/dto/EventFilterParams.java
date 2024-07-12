@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Запрос на поиск события пользователем
+ * Параметры фильтрации событий
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserSearchEventParams {
+public class EventFilterParams {
 
     /**
      * Текст для поиска в содержимом аннотации и подробном описании события

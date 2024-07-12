@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.dto.EventShortDto;
-import ru.practicum.ewm.dto.UserSearchEventParams;
+import ru.practicum.ewm.dto.EventFilterParams;
 import ru.practicum.ewm.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,10 +54,10 @@ public class PublicEventController {
      * В случае, если по заданным фильтрам не найдено ни одного события, возвращает пустой список
      */
     @GetMapping
-    public List<EventShortDto> getAllEvents(@Valid UserSearchEventParams searchEventParams,
+    public List<EventShortDto> getAllEvents(@Valid EventFilterParams searchEventParams,
                                             HttpServletRequest request) {
         log.info("[GET /events] получение событий с возможностью фильтрации {}", searchEventParams);
-        return service.getAllEvents(searchEventParams, request);
+        return service.getAllEventsByFilter(searchEventParams, request);
     }
 
     /**

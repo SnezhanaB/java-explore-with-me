@@ -127,7 +127,7 @@ public class EventServiceImpl implements EventService {
      * список
      */
     @Override
-    public List<EventShortDto> getAllEvents(Long userId, Integer from, Integer size) {
+    public List<EventShortDto> getAllEventsByUser(Long userId, Integer from, Integer size) {
         checkUserById(userId);
         Pageable page = new ChunkRequest(from, size);
 
@@ -233,6 +233,7 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public List<ParticipationRequestDto> getAllRequestByEventFromOwner(Long userId, Long eventId) {
+        // TODO requestRepository needed
         return List.of();
     }
 
@@ -257,6 +258,19 @@ public class EventServiceImpl implements EventService {
      */
     @Override
     public EventRequestStatusUpdateResult updateStatusRequestFromOwner(Long userId, Long eventId, EventRequestStatusUpdateRequest updateRequest) {
+        checkUserById(userId);
+        Event event = getEventById(eventId);
+
+        // если для события лимит заявок равен 0 или отключена пре-модерация заявок,
+        // то подтверждение заявок не требуется
+        if (event.getParticipantLimit() == 0 || !event.getRequestModeration()) {
+            throw new ConflictException("Confirmation of requests is not required");
+        }
+
+        // нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие
+        // (Ожидается код ошибки 409)
+        // TODO requestRepository needed
+
         return null;
     }
 
@@ -278,15 +292,68 @@ public class EventServiceImpl implements EventService {
      * * информацию о том, что по этому эндпоинту был осуществлен и обработан запрос, нужно сохранить в сервисе
      * статистики
      *
-     * @param searchEventParams Запрос на поиск события пользователем
+     * @param filterParams Параметры фильтрации событий
      * @param request           служебное инфо о запросе
      * @return список найденных событий
      * <p>
      * В случае, если по заданным фильтрам не найдено ни одного события, возвращает пустой список
      */
     @Override
-    public List<EventShortDto> getAllEvents(UserSearchEventParams searchEventParams, HttpServletRequest request) {
-        return List.of();
+    public List<EventShortDto> getAllEventsByFilter(EventFilterParams filterParams, HttpServletRequest request) {
+        if (filterParams.getRangeEnd() != null && filterParams.getRangeStart() != null) {
+            if (filterParams.getRangeEnd().isBefore(filterParams.getRangeStart())) {
+                throw new InvalidParametersException("RangeStart should be before RangeEnd");
+            }
+        }
+
+        Pageable page = new ChunkRequest(filterParams.getFrom(), filterParams.getSize());
+
+        Specification<Event> specification = Specification.where(null);
+        LocalDateTime now = LocalDateTime.now();
+
+        // Список идентификаторов категорий в которых будет вестись поиск
+        if (isNotEmpty(filterParams.getCategories())) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                root.get("category").get("id").in(filterParams.getCategories()));
+        }
+
+        // текстовый поиск (по аннотации и подробному описанию) должен быть без учета регистра букв
+        if (filterParams.getText() != null) {
+            String searchText = filterParams.getText().toLowerCase();
+            specification = specification.and((root, query, criteriaBuilder) ->
+                criteriaBuilder.or(
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("annotation")), "%" + searchText + "%"),
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + searchText + "%")
+                ));
+        }
+
+        // если в запросе не указан диапазон дат [rangeStart-rangeEnd], то нужно выгружать события, которые произойдут
+        // позже текущей даты и времени
+        LocalDateTime startDateTime = filterParams.getRangeStart() == null ? now : filterParams.getRangeStart();
+        specification = specification.and((root, query, criteriaBuilder) ->
+            criteriaBuilder.greaterThan(root.get("eventDate"), startDateTime));
+        if (filterParams.getRangeEnd() != null) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                criteriaBuilder.lessThan(root.get("eventDate"), filterParams.getRangeEnd()));
+        }
+
+        // это публичный эндпоинт, соответственно в выдаче должны быть только опубликованные события
+        specification = specification.and((root, query, criteriaBuilder) ->
+            criteriaBuilder.equal(root.get("eventStatus"), EventStatus.PUBLISHED));
+
+        // Только события у которых не исчерпан лимит запросов на участие
+        if (filterParams.getOnlyAvailable() != null) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                criteriaBuilder.greaterThanOrEqualTo(root.get("participantLimit"), 0));
+        }
+
+        List<EventShortDto> resultEvents = repository.findAll(specification, page).map(this::toShortDto).toList();
+
+        // TODO информация о каждом событии должна включать в себя количество просмотров и количество уже одобренных заявок на участие
+        // TODO информацию о том, что по этому эндпоинту был осуществлен и обработан запрос, нужно сохранить в сервисе
+        //  статистики
+
+        return resultEvents;
     }
 
     /**
@@ -313,7 +380,9 @@ public class EventServiceImpl implements EventService {
         if (!event.getState().equals(EventStatus.PUBLISHED)) {
             throw new NotFoundException("Event with id = " + eventId + " not published");
         }
-        // TODO add stats
+        // TODO информация о событии должна включать в себя количество просмотров и количество подтвержденных запросов
+        // TODO информацию о том, что по этому эндпоинту был осуществлен и обработан запрос, нужно сохранить в сервисе
+        //  статистики
         return toFullDto(event);
     }
 
@@ -434,7 +503,7 @@ public class EventServiceImpl implements EventService {
         return o != null;
     }
 
-    boolean isNotEmpty(List list) {
+    boolean isNotEmpty(List<?> list) {
         return list != null && !list.isEmpty();
     }
 

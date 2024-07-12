@@ -39,7 +39,7 @@ public interface EventService {
      * @return Список событий. В случае, если по заданным фильтрам не найдено ни одного события, возвращает пустой
      * список
      */
-    List<EventShortDto> getAllEvents(Long userId, Integer from, Integer size);
+    List<EventShortDto> getAllEventsByUser(Long userId, Integer from, Integer size);
 
     /**
      * Добавление нового события пользователем
@@ -125,7 +125,7 @@ public interface EventService {
      * <p>
      * В случае, если по заданным фильтрам не найдено ни одного события, возвращает пустой список
      */
-    List<EventShortDto> getAllEvents(UserSearchEventParams searchEventParams, HttpServletRequest request);
+    List<EventShortDto> getAllEventsByFilter(EventFilterParams searchEventParams, HttpServletRequest request);
 
     /**
      * Получение подробной информации об опубликованном событии по его идентификатору

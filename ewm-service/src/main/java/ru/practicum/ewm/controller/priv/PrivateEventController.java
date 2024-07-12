@@ -41,7 +41,7 @@ public class PrivateEventController {
                                             @RequestParam(value = "size", defaultValue = "10")
                                             @Positive Integer size) {
         log.info("[GET /users/{}/events] Получение событий, добавленных текущим пользователем", userId);
-        return service.getAllEvents(userId, from, size);
+        return service.getAllEventsByUser(userId, from, size);
     }
 
     /**
