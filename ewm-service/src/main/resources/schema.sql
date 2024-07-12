@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS categories CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS locations CASCADE;
 DROP TABLE IF EXISTS events CASCADE;
+DROP TABLE If EXISTS requests CASCADE;
 
 CREATE TABLE IF NOT EXISTS categories (
     id   BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -23,7 +24,7 @@ CREATE TABLE IF NOT EXISTS locations
 
 CREATE TABLE IF NOT EXISTS events
 (
-    id                  BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY UNIQUE,
+    id                  BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     annotation          VARCHAR(2000) NOT NULL,
     category_id         BIGINT NOT NULL,
     confirmed_Requests  BIGINT,
@@ -43,3 +44,13 @@ CREATE TABLE IF NOT EXISTS events
     CONSTRAINT          fk_event_to_location FOREIGN KEY (location_id) REFERENCES locations (id)
 );
 
+CREATE TABLE IF NOT EXISTS requests
+(
+    id           BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    create_date  TIMESTAMP WITHOUT TIME ZONE,
+    event_id     BIGINT NOT NULL,
+    requester_id BIGINT NOT NULL,
+    status       VARCHAR(20),
+    CONSTRAINT   fk_requests_to_event FOREIGN KEY (event_id) REFERENCES events (id),
+    CONSTRAINT   fk_requests_to_user FOREIGN KEY (requester_id) REFERENCES users (id)
+);
