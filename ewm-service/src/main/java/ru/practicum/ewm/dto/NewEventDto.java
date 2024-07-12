@@ -67,14 +67,14 @@ public class NewEventDto {
     /**
      * Нужно ли оплачивать участие
      */
-    private Boolean paid;
+    private Boolean paid = false;
 
     /**
      * Ограничение на количество участников.
      * Значение 0 - означает отсутствие ограничения
      */
     @PositiveOrZero
-    private Integer participantLimit;
+    private Integer participantLimit = 0;
 
     /**
      * Дата и время публикации события (в формате \"yyyy-MM-dd HH:mm:ss\")
@@ -87,7 +87,7 @@ public class NewEventDto {
     /**
      * Нужна ли пре-модерация заявок на участие
      */
-    private Boolean requestModeration;
+    private Boolean requestModeration = true;
 
     /**
      * Заголовок
