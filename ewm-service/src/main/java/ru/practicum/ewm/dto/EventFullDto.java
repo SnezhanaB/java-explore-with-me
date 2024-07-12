@@ -104,7 +104,7 @@ public class EventFullDto {
     /**
      * Список состояний жизненного цикла события
      */
-    private EventStatus eventStatus;
+    private EventStatus state;
 
     /**
      * Заголовок
