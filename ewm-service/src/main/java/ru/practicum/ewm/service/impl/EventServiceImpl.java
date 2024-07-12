@@ -14,10 +14,7 @@ import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.Location;
 import ru.practicum.ewm.model.User;
 import ru.practicum.ewm.model.enums.EventStatus;
-import ru.practicum.ewm.repository.CategoryRepository;
-import ru.practicum.ewm.repository.EventRepository;
-import ru.practicum.ewm.repository.LocationRepository;
-import ru.practicum.ewm.repository.UserRepository;
+import ru.practicum.ewm.repository.*;
 import ru.practicum.ewm.service.EventService;
 import ru.practicum.ewm.utils.ChunkRequest;
 
@@ -32,6 +29,7 @@ public class EventServiceImpl implements EventService {
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final RequestRepository requestRepository;
     private final ModelMapper mapper = new ModelMapper();
 
     /**
@@ -96,17 +94,17 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto updateEventByAdmin(Long eventId, UpdateEventAdminRequest request) {
         Event event = getEventById(eventId);
-        if (event.getState().equals(EventStatus.PUBLISHED) || event.getState().equals(EventStatus.CANCELED)) {
+        if (event.getEventStatus().equals(EventStatus.PUBLISHED) || event.getEventStatus().equals(EventStatus.CANCELED)) {
             throw new ConflictException("Only pending events can be changed");
         }
         boolean hasChanges = updateEventByDto(event, request);
         if (isNotNull(request.getStateAction())) {
             switch (request.getStateAction()) {
                 case PUBLISH_EVENT:
-                    event.setState(EventStatus.PUBLISHED);
+                    event.setEventStatus(EventStatus.PUBLISHED);
                     break;
                 case REJECT_EVENT:
-                    event.setState(EventStatus.CANCELED);
+                    event.setEventStatus(EventStatus.CANCELED);
                     break;
             }
             hasChanges = true;
@@ -155,7 +153,7 @@ public class EventServiceImpl implements EventService {
         event.setCreatedOn(createdOn);
         event.setInitiator(user);
         event.setCategory(category);
-        event.setState(EventStatus.PENDING);
+        event.setEventStatus(EventStatus.PENDING);
         if (eventDto.getLocation() != null) {
             Location location = locationRepository.save(toModel(eventDto.getLocation()));
             event.setLocation(location);
@@ -199,7 +197,7 @@ public class EventServiceImpl implements EventService {
     public EventFullDto updateEventByOwner(Long userId, Long eventId, UpdateEventUserRequest userRequest) {
         checkUserById(userId);
         Event event = getEventById(eventId);
-        if (event.getState().equals(EventStatus.PUBLISHED)) {
+        if (event.getEventStatus().equals(EventStatus.PUBLISHED)) {
             throw new ConflictException("Only pending or canceled events can be changed");
         }
         if (!event.getInitiator().getId().equals(userId)) {
@@ -209,11 +207,11 @@ public class EventServiceImpl implements EventService {
         if (isNotNull(userRequest.getStateAction())) {
             switch (userRequest.getStateAction()) {
                 case SEND_TO_REVIEW:
-                    event.setState(EventStatus.PENDING);
+                    event.setEventStatus(EventStatus.PENDING);
                     hasChanges = true;
                     break;
                 case CANCEL_REVIEW:
-                    event.setState(EventStatus.CANCELED);
+                    event.setEventStatus(EventStatus.CANCELED);
                     hasChanges = true;
                     break;
             }
@@ -377,7 +375,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto getEventById(Long eventId, HttpServletRequest request) {
         Event event = getEventById(eventId);
-        if (!event.getState().equals(EventStatus.PUBLISHED)) {
+        if (!event.getEventStatus().equals(EventStatus.PUBLISHED)) {
             throw new NotFoundException("Event with id = " + eventId + " not published");
         }
         // TODO информация о событии должна включать в себя количество просмотров и количество подтвержденных запросов

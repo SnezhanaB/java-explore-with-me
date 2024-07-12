@@ -114,7 +114,7 @@ public class Event {
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private EventStatus state;
+    private EventStatus eventStatus;
 
     /**
      * Заголовок

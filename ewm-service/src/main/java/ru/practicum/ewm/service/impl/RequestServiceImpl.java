@@ -72,7 +72,7 @@ public class RequestServiceImpl implements RequestService {
         }
 
         // нельзя участвовать в неопубликованном событии (Ожидается код ошибки 409)
-        if (!event.getState().equals(EventStatus.PUBLISHED)) {
+        if (!event.getEventStatus().equals(EventStatus.PUBLISHED)) {
             throw new ConflictException("Event not published");
         }
 
