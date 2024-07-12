@@ -45,6 +45,7 @@ public class NewEventDto {
      * и воплотили в жизнь инновационный проект, предлагающий
      * свежий взгляд на развлечения..."
      */
+    @NotBlank
     @Length(min = 20, max = 7000)
     private String description;
 
