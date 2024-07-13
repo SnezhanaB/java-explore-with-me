@@ -9,11 +9,9 @@ import ru.practicum.ewm.dto.*;
 import ru.practicum.ewm.exception.ConflictException;
 import ru.practicum.ewm.exception.InvalidParametersException;
 import ru.practicum.ewm.exception.NotFoundException;
-import ru.practicum.ewm.model.Category;
-import ru.practicum.ewm.model.Event;
-import ru.practicum.ewm.model.Location;
-import ru.practicum.ewm.model.User;
+import ru.practicum.ewm.model.*;
 import ru.practicum.ewm.model.enums.EventStatus;
+import ru.practicum.ewm.model.enums.RequestStatus;
 import ru.practicum.ewm.repository.*;
 import ru.practicum.ewm.service.EventService;
 import ru.practicum.ewm.utils.ChunkRequest;
@@ -21,7 +19,9 @@ import ru.practicum.ewm.utils.ModelMapperFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -266,11 +266,59 @@ public class EventServiceImpl implements EventService {
             throw new ConflictException("Confirmation of requests is not required");
         }
 
-        // нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие
+        // статус можно изменить только у заявок, находящихся в состоянии ожидания
         // (Ожидается код ошибки 409)
-        // TODO requestRepository needed
+        List<Request> requests = requestRepository.findAllById(updateRequest.getRequestIds());
+        boolean includesNotPending =
+                requests.stream().anyMatch((request) -> request.getStatus() != RequestStatus.PENDING);
+        if (includesNotPending) {
+            throw new ConflictException("Requests must have status PENDING");
+        }
+        // Количество уже подтвержденных запросов на участие в событии
+        int confirmedRequestsCount = requestRepository.countByEventIdAndStatus(event.getId(), RequestStatus.CONFIRMED);
+        // Количество доступных мест
+        int availableLimit = event.getParticipantLimit() - confirmedRequestsCount;
+        List<Request> confirmed = new ArrayList<>();
+        List<Request> rejected = new ArrayList<>();
+        RequestStatus status = updateRequest.getStatus();
+        switch (status) {
+            case CONFIRMED:
+                // нельзя подтвердить заявку, если уже достигнут лимит по заявкам на данное событие
+                // (Ожидается код ошибки 409)
+                if (availableLimit <= 0) {
+                    throw new ConflictException("The participant limit has been reached");
+                }
 
-        return null;
+                for (Request request : requests) {
+                    if (availableLimit > 0) {
+                        request.setStatus(RequestStatus.CONFIRMED);
+                        confirmed.add(request);
+                        availableLimit--;
+                    } else {
+                        request.setStatus(RequestStatus.REJECTED);
+                        rejected.add(request);
+                    }
+                }
+                break;
+
+            case REJECTED:
+                for (Request request : requests) {
+                    request.setStatus(RequestStatus.REJECTED);
+                    rejected.add(request);
+                }
+                break;
+
+            default:
+                throw new InvalidParametersException("Status should be CONFIRMED or REJECTED");
+        }
+        requestRepository.saveAll(requests);
+
+        EventRequestStatusUpdateResult result = EventRequestStatusUpdateResult.builder()
+                .confirmedRequests(confirmed.stream().map(this::requestToDto).collect(Collectors.toList()))
+                .rejectedRequests(rejected.stream().map(this::requestToDto).collect(Collectors.toList()))
+                .build();
+
+        return result;
     }
 
     /**
@@ -480,6 +528,10 @@ public class EventServiceImpl implements EventService {
 
     EventShortDto toShortDto(Event event) {
         return mapper.map(event, EventShortDto.class);
+    }
+
+    ParticipationRequestDto requestToDto(Request request) {
+        return mapper.map(request, ParticipationRequestDto.class);
     }
 
     Event toModel(EventFullDto dto) {

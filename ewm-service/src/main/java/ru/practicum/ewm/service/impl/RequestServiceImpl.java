@@ -57,7 +57,6 @@ public class RequestServiceImpl implements RequestService {
     public ParticipationRequestDto addRequest(Long userId, Long eventId) {
         User user = getUserById(userId);
         Event event = getEventById(eventId);
-        LocalDateTime now = LocalDateTime.now();
 
         // инициатор события не может добавить запрос на участие в своём событии
         // (Ожидается код ошибки 409)
@@ -82,24 +81,7 @@ public class RequestServiceImpl implements RequestService {
             throw new ConflictException("Request already exists");
         }
 
-        Request request = new Request();
-        request.setCreated(now);
-        request.setEvent(event);
-        request.setRequester(user);
-
-        // если для события отключена пре-модерация запросов на участие,
-        // то запрос должен автоматически перейти в состояние подтвержденного
-        if (event.getRequestModeration()) {
-            request.setStatus(RequestStatus.PENDING);
-        } else {
-            request.setStatus(RequestStatus.CONFIRMED);
-        }
-
-        // При добавлении запроса на участие при participantLimit == 0
-        // должен быть статус CONFIRMED
-        if (event.getParticipantLimit() == 0) {
-            request.setStatus(RequestStatus.CONFIRMED);
-        }
+        Request request = createRequest(event, user);
 
         return toDto(repository.save(request));
     }
@@ -124,6 +106,32 @@ public class RequestServiceImpl implements RequestService {
         request.setStatus(RequestStatus.CANCELED);
 
         return toDto(repository.save(request));
+    }
+
+    /**
+     * Проинициализировать запрос на участие в событии от пользователя
+     */
+    private static Request createRequest(Event event, User user) {
+        Request request = new Request();
+        LocalDateTime now = LocalDateTime.now();
+        request.setCreated(now);
+        request.setEvent(event);
+        request.setRequester(user);
+
+        // если для события отключена пре-модерация запросов на участие,
+        // то запрос должен автоматически перейти в состояние подтвержденного
+        if (event.getRequestModeration()) {
+            request.setStatus(RequestStatus.PENDING);
+        } else {
+            request.setStatus(RequestStatus.CONFIRMED);
+        }
+
+        // При добавлении запроса на участие при participantLimit == 0
+        // должен быть статус CONFIRMED
+        if (event.getParticipantLimit() == 0) {
+            request.setStatus(RequestStatus.CONFIRMED);
+        }
+        return request;
     }
 
     private void checkUserById(Long userId) {
