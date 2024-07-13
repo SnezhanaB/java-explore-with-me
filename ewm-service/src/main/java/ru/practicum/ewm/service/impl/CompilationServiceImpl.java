@@ -95,7 +95,7 @@ public class CompilationServiceImpl implements CompilationService {
             compilation.setPinned(updateDto.getPinned());
         }
 
-        if (updateDto.getTitle() != null) {
+        if (updateDto.getTitle() != null && !updateDto.getTitle().isBlank()) {
             compilation.setTitle(updateDto.getTitle());
         }
 
