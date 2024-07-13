@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -73,7 +74,15 @@ public class EventServiceImpl implements EventService {
         }
 
         List<EventFullDto> result = repository.findAll(specification, page).map(this::toFullDto).toList();
-        // TODO event.setConfirmedRequests
+        // Расчёт event.setConfirmedRequests
+        List eventIds = result.stream().map((e) -> e.getId()).collect(Collectors.toList());
+        List<Request> requests = requestRepository
+                .findAllByEventIdInAndStatus(eventIds, RequestStatus.CONFIRMED);
+        Map<Long, List<Request>> groupedRequests = requests.stream()
+                .collect(Collectors.groupingBy(r -> r.getEvent().getId()));
+        for (EventFullDto event : result) {
+            event.setConfirmedRequests(groupedRequests.getOrDefault(event.getId(), List.of()).size());
+        }
         return result;
     }
 
