@@ -86,7 +86,7 @@ public class EventServiceImpl implements EventService {
 
         List<EventFullDto> result = repository.findAll(specification, page).map(this::toFullDto).toList();
         // Расчёт event.setConfirmedRequests
-        List<Long> eventIds = result.stream().map(EventShortDto::getId).collect(Collectors.toList());
+        List<Long> eventIds = result.stream().map(EventFullDto::getId).collect(Collectors.toList());
         List<Request> requests = requestRepository
                 .findAllByEventIdInAndStatus(eventIds, RequestStatus.CONFIRMED);
         Map<Long, List<Request>> groupedRequests = requests.stream()
