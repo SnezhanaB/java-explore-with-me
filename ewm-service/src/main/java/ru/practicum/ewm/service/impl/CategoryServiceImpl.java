@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository repository;
-    private final ModelMapper mapper = new ModelMapper();
+    private final ModelMapper mapper;
 
     /**
      * Добавление новой категории

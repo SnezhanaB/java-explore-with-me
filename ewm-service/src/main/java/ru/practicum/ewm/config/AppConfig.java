@@ -1,14 +1,19 @@
-package ru.practicum.ewm.utils;
+package ru.practicum.ewm.config;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.dto.ParticipationRequestDto;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.Request;
 
-public class ModelMapperFactory {
-    public static ModelMapper create() {
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public ModelMapper mapper() {
         ModelMapper modelMapper = new ModelMapper();
 
         TypeMap<EventFullDto, Event> eventTypeMap = modelMapper.createTypeMap(EventFullDto.class, Event.class);
@@ -21,7 +26,7 @@ public class ModelMapperFactory {
                 ParticipationRequestDto.class);
         requestDtoTypeMap.addMappings(
                 mapper -> mapper.map(request -> request.getRequester().getId(),
-                ParticipationRequestDto::setRequester)
+                        ParticipationRequestDto::setRequester)
         );
         requestDtoTypeMap.addMappings(
                 mapper -> mapper.map(request -> request.getEvent().getId(),

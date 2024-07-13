@@ -15,7 +15,6 @@ import ru.practicum.ewm.model.enums.RequestStatus;
 import ru.practicum.ewm.repository.*;
 import ru.practicum.ewm.service.EventService;
 import ru.practicum.ewm.utils.ChunkRequest;
-import ru.practicum.ewm.utils.ModelMapperFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -31,7 +30,7 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
-    private final ModelMapper mapper = ModelMapperFactory.create();
+    private final ModelMapper mapper;
 
     /**
      * Поиск событий админом

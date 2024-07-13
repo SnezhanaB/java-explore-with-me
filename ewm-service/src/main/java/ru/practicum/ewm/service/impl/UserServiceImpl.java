@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
-    private final ModelMapper mapper = new ModelMapper();
+    private final ModelMapper mapper;
 
     /**
      * Получение списка пользователей

@@ -16,7 +16,6 @@ import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.repository.RequestRepository;
 import ru.practicum.ewm.repository.UserRepository;
 import ru.practicum.ewm.service.RequestService;
-import ru.practicum.ewm.utils.ModelMapperFactory;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +27,7 @@ public class RequestServiceImpl implements RequestService {
     private final RequestRepository repository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
-    private final ModelMapper mapper = ModelMapperFactory.create();
+    private final ModelMapper mapper;
 
     /**
      * Получение информации о заявках текущего пользователя на участие в чужих событиях

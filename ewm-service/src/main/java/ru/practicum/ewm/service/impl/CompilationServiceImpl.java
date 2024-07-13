@@ -1,12 +1,21 @@
 package ru.practicum.ewm.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.CompilationDto;
 import ru.practicum.ewm.dto.NewCompilationDto;
+import ru.practicum.ewm.repository.CompilationRepository;
 import ru.practicum.ewm.service.CompilationService;
 
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class CompilationServiceImpl implements CompilationService {
+    private final CompilationRepository compilationRepository;
+    private final ModelMapper mapper;
+
     /**
      * Получение подборок событий
      *
