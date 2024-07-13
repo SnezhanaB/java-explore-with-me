@@ -3,6 +3,8 @@ DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS locations CASCADE;
 DROP TABLE IF EXISTS events CASCADE;
 DROP TABLE If EXISTS requests CASCADE;
+DROP TABLE IF EXISTS compilations CASCADE;
+DROP TABLE IF EXISTS compilations_to_event CASCADE;
 
 CREATE TABLE IF NOT EXISTS categories (
     id   BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -53,4 +55,20 @@ CREATE TABLE IF NOT EXISTS requests
     status       VARCHAR(20),
     CONSTRAINT   fk_requests_to_event FOREIGN KEY (event_id) REFERENCES events (id),
     CONSTRAINT   fk_requests_to_user FOREIGN KEY (requester_id) REFERENCES users (id)
+);
+
+CREATE TABLE IF NOT EXISTS compilations
+(
+    id     BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY UNIQUE,
+    pinned BOOLEAN NOT NULL,
+    title  VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS compilations_to_event
+(
+    id              BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    event_id        BIGINT NOT NULL,
+    compilation_id  BIGINT NOT NULL,
+    CONSTRAINT      fk_event_compilation_to_event FOREIGN KEY (event_id) REFERENCES events (id) ON UPDATE CASCADE,
+    CONSTRAINT      fk_event_compilation_to_compilation FOREIGN KEY (compilation_id) REFERENCES compilations (id) ON UPDATE CASCADE
 );

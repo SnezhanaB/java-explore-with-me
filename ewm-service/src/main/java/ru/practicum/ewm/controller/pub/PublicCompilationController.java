@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.CompilationDto;
+import ru.practicum.ewm.service.CompilationService;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -23,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping(path = "/compilations")
 public class PublicCompilationController {
+    private final CompilationService service;
 
     /**
      * Получение подборок событий
@@ -40,8 +42,7 @@ public class PublicCompilationController {
             @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
             @RequestParam(defaultValue = "10") @Positive Integer size) {
         log.info("[GET /compilations] получение подборок событий");
-        // TODO
-        return Collections.emptyList();
+        return service.getCompilations(pinned, from, size);
     }
 
     /**
@@ -52,9 +53,8 @@ public class PublicCompilationController {
      * В случае, если подборки с заданным id не найдено, возвращает статус код 404
      */
     @GetMapping("/{compId}")
-    public CompilationDto findByIdCompilation(@PathVariable Integer compId) {
+    public CompilationDto findByIdCompilation(@PathVariable Long compId) {
         log.info("[GET /compilations/{}] получение подборки событий по его id", compId);
-        // TODO
-        return null;
+        return service.findByIdCompilation(compId);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.CompilationDto;
 import ru.practicum.ewm.dto.NewCompilationDto;
+import ru.practicum.ewm.service.CompilationService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -22,6 +23,7 @@ import javax.validation.constraints.Positive;
 @RequiredArgsConstructor
 @RequestMapping(path = "/admin/compilations")
 public class AdminCompilationController {
+    private final CompilationService service;
 
     /**
      * Добавление новой подборки (подборка может не содержать событий)
@@ -32,8 +34,7 @@ public class AdminCompilationController {
     @ResponseStatus(HttpStatus.CREATED)
     public CompilationDto addCompilation(@RequestBody @Valid NewCompilationDto compilationDto) {
         log.info("[POST /admin/compilations] создание подборки событий {}", compilationDto);
-        // TODO
-        return null;
+        return service.addCompilation(compilationDto);
     }
 
     /**
@@ -44,10 +45,9 @@ public class AdminCompilationController {
      */
     @PatchMapping("/{compId}")
     public CompilationDto updateCompilation(@RequestBody @Valid NewCompilationDto updateDto,
-                                            @PathVariable Integer compId) {
+                                            @PathVariable Long compId) {
         log.info("[PATCH /admin/compilations/{}] обновление подборки событий {}", compId, updateDto);
-        // TODO
-        return null;
+        return service.updateCompilation(updateDto, compId);
     }
 
     /**
@@ -56,9 +56,9 @@ public class AdminCompilationController {
      */
     @DeleteMapping("/{compId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCompilation(@PathVariable @Positive Integer compId) {
+    public void deleteCompilation(@PathVariable @Positive Long compId) {
         log.info("[DELETE /admin/compilations/{}] удаление подборки событий", compId);
-        // TODO
+        service.deleteCompilation(compId);
     }
 
 }
