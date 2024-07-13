@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,15 +16,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NewCompilationDto {
+public class UpdateCompilationDto {
     /**
      * Список идентификаторов событий входящих в подборку
      */
-    private List<Long> events = Collections.emptyList();
+    private List<Long> events;
     /**
      * Закреплена ли подборка на главной странице сайта
      */
-    private Boolean pinned = false;
+    private Boolean pinned;
     /**
      * Заголовок подборки
      * <p>

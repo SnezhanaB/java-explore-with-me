@@ -2,6 +2,7 @@ package ru.practicum.ewm.service;
 
 import ru.practicum.ewm.dto.CompilationDto;
 import ru.practicum.ewm.dto.NewCompilationDto;
+import ru.practicum.ewm.dto.UpdateCompilationDto;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ public interface CompilationService {
      * @param compId id подборки
      * @return обновленная подборка
      */
-    CompilationDto updateCompilation(NewCompilationDto updateDto, Long compId);
+    CompilationDto updateCompilation(UpdateCompilationDto updateDto, Long compId);
 
     /**
      * Удаление подборки

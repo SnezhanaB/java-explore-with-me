@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.CompilationDto;
 import ru.practicum.ewm.dto.NewCompilationDto;
+import ru.practicum.ewm.dto.UpdateCompilationDto;
 import ru.practicum.ewm.service.CompilationService;
 
 import javax.validation.Valid;
@@ -44,7 +45,7 @@ public class AdminCompilationController {
      * @return обновленная подборка
      */
     @PatchMapping("/{compId}")
-    public CompilationDto updateCompilation(@RequestBody @Valid NewCompilationDto updateDto,
+    public CompilationDto updateCompilation(@RequestBody @Valid UpdateCompilationDto updateDto,
                                             @PathVariable Long compId) {
         log.info("[PATCH /admin/compilations/{}] обновление подборки событий {}", compId, updateDto);
         return service.updateCompilation(updateDto, compId);

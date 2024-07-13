@@ -2,18 +2,27 @@ package ru.practicum.ewm.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.CompilationDto;
 import ru.practicum.ewm.dto.NewCompilationDto;
+import ru.practicum.ewm.dto.UpdateCompilationDto;
+import ru.practicum.ewm.exception.NotFoundException;
+import ru.practicum.ewm.model.Compilation;
+import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.repository.CompilationRepository;
+import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.service.CompilationService;
+import ru.practicum.ewm.utils.ChunkRequest;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CompilationServiceImpl implements CompilationService {
-    private final CompilationRepository compilationRepository;
+    private final CompilationRepository repository;
+    private final EventRepository eventRepository;
     private final ModelMapper mapper;
 
     /**
@@ -28,7 +37,11 @@ public class CompilationServiceImpl implements CompilationService {
      */
     @Override
     public List<CompilationDto> getCompilations(Boolean pinned, Integer from, Integer size) {
-        return List.of();
+        Pageable page = new ChunkRequest(from, size);
+        if (pinned != null) {
+            return repository.findAllByPinned(pinned, page).map(this::toDto).toList();
+        }
+        return repository.findAll(page).map(this::toDto).toList();
     }
 
     /**
@@ -41,7 +54,7 @@ public class CompilationServiceImpl implements CompilationService {
      */
     @Override
     public CompilationDto findByIdCompilation(Long compId) {
-        return null;
+        return toDto(getCompilationById(compId));
     }
 
     /**
@@ -52,7 +65,14 @@ public class CompilationServiceImpl implements CompilationService {
      */
     @Override
     public CompilationDto addCompilation(NewCompilationDto compilationDto) {
-        return null;
+        List<Event> events = eventRepository.findAllById(compilationDto.getEvents());
+        Compilation compilation = Compilation.builder()
+                .events(new HashSet<>(events))
+                .pinned(compilationDto.getPinned())
+                .title(compilationDto.getTitle())
+                .build();
+
+        return toDto(repository.save(compilation));
     }
 
     /**
@@ -63,8 +83,23 @@ public class CompilationServiceImpl implements CompilationService {
      * @return обновленная подборка
      */
     @Override
-    public CompilationDto updateCompilation(NewCompilationDto updateDto, Long compId) {
-        return null;
+    public CompilationDto updateCompilation(UpdateCompilationDto updateDto, Long compId) {
+        Compilation compilation = getCompilationById(compId);
+
+        if (updateDto.getEvents() != null) {
+            List<Event> events = eventRepository.findAllById(updateDto.getEvents());
+            compilation.setEvents(new HashSet<>(events));
+        }
+
+        if (updateDto.getPinned() != null) {
+            compilation.setPinned(updateDto.getPinned());
+        }
+
+        if (updateDto.getTitle() != null) {
+            compilation.setTitle(updateDto.getTitle());
+        }
+
+        return toDto(repository.save(compilation));
     }
 
     /**
@@ -74,6 +109,17 @@ public class CompilationServiceImpl implements CompilationService {
      */
     @Override
     public void deleteCompilation(Long compId) {
+        getCompilationById(compId);
+        repository.deleteById(compId);
+    }
 
+    private Compilation getCompilationById(Long compilationId) {
+        return repository.findById(compilationId).orElseThrow(
+                () -> new NotFoundException("Compilation with id=" + compilationId + " was not found"));
+    }
+
+
+    private CompilationDto toDto(Compilation compilation) {
+        return mapper.map(compilation, CompilationDto.class);
     }
 }
