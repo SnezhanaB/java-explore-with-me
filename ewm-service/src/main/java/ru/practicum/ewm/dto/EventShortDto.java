@@ -68,5 +68,5 @@ public class EventShortDto {
     /**
      * Количество просмотрев события
      */
-    private Integer views;
+    private Long views;
 }
