@@ -6,14 +6,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.ewm.model.Comment;
 
-import java.util.List;
-
-
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("select c " +
             "from comments as c " +
-            "where lower(c.text) like lower(concat('%', ?1, '%') ) and c.event.id in (?2)")
-    Page<Comment> search(String text, List<Long> eventIds, Pageable pageable);
+            "where lower(c.text) like lower(concat('%', ?1, '%')) and c.event.id=?2")
+    Page<Comment> searchByTextAndEventId(String text, Long eventId, Pageable pageable);
+
+    @Query("select c " +
+            "from comments as c " +
+            "where lower(c.text) like lower(concat('%', ?1, '%'))")
+    Page<Comment> searchByText(String text, Pageable pageable);
 
     Page<Comment> findAllByEventId(Long eventId, Pageable pageable);
 }
