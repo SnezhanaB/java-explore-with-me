@@ -471,7 +471,7 @@ public class EventServiceImpl implements EventService {
     public List<CommentDto> getEventComments(Long eventId, Integer from, Integer size) {
         Pageable page = new ChunkRequest(from, size, Sort.by(Sort.Direction.DESC, "created"));
         getEventById(eventId);
-        
+
         return commentRepository.findAllByEventId(eventId, page)
                 .map(this::toCommentDto).toList();
     }
