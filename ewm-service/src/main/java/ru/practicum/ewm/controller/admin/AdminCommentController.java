@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.AdminCommentDto;
 import ru.practicum.ewm.dto.CommentDto;
 import ru.practicum.ewm.dto.UpdateCommentDto;
+import ru.practicum.ewm.service.CommentService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.List;
 
 @Slf4j
 @Validated
@@ -19,6 +21,8 @@ import javax.validation.constraints.PositiveOrZero;
 @RequiredArgsConstructor
 @RequestMapping(path = "/admin/comments")
 public class AdminCommentController {
+    private final CommentService service;
+
     /**
      * Получение администратором последних опубликованных комментариев постранично
      * @param from количество элементов, которые нужно пропустить для формирования текущего набора
@@ -28,7 +32,7 @@ public class AdminCommentController {
      * @return список комментариев, сначала новые
      */
     @GetMapping
-    public AdminCommentDto searchComments(
+    public List<AdminCommentDto> searchComments(
             @RequestParam(value = "from", defaultValue = "0")
             @PositiveOrZero Integer from,
             @RequestParam(value = "size", defaultValue = "10")
@@ -37,8 +41,7 @@ public class AdminCommentController {
             @RequestParam String text
     ) {
         log.info("[POST /admin/comments] Получение администратором последних опубликованных комментариев");
-        // TODO
-        return null;
+        return service.searchCommentsByAdmin(from, size, eventId, text);
     }
 
     /**
@@ -53,8 +56,7 @@ public class AdminCommentController {
             @RequestBody @Valid UpdateCommentDto updateCommentDto
     ) {
         log.info("[PATCH /admin/comments/{}] модерация комментария администратором {}", commentId, updateCommentDto);
-        // TODO
-        return null;
+        return service.moderateCommentByAdmin(commentId, updateCommentDto);
     }
 
     /**
@@ -63,10 +65,10 @@ public class AdminCommentController {
      */
     @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(
+    public void deleteComment(
             @PathVariable @Positive Long commentId
     ) {
         log.info("[DELETE /admin/comments/{}] Удаление комментария пользователем", commentId);
-        // TODO
+        service.deleteCommentByAdmin(commentId);
     }
 }

@@ -465,6 +465,12 @@ public class EventServiceImpl implements EventService {
         return dto;
     }
 
+    @Override
+    public List<CommentDto> getEventComments(Long eventId, Integer from, Integer size) {
+        // TODO
+        return List.of();
+    }
+
     private void addRequestToStats(HttpServletRequest request) {
         statsClient.addHit(EndpointHitDto.builder()
                 .app(applicationName)

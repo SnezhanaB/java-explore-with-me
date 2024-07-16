@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.*;
+import ru.practicum.ewm.service.CommentService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -16,6 +17,8 @@ import javax.validation.constraints.Positive;
 @RequiredArgsConstructor
 @RequestMapping(path = "/users/{userId}/comments")
 public class PrivateCommentController {
+    private final CommentService service;
+
     /**
      * Добавление нового комментария пользователем
      * @param userId идентификатор пользователя
@@ -27,8 +30,7 @@ public class PrivateCommentController {
     public CommentDto addComment(@PathVariable(value = "userId") @Positive Long userId,
                                @RequestBody @Valid NewCommentDto commentDto) {
         log.info("[POST /users/{}/comments] запрос на создание комментария {}", userId, commentDto);
-        // TODO
-        return null;
+        return service.addCommentByUser(userId, commentDto);
     }
 
     /**
@@ -45,8 +47,7 @@ public class PrivateCommentController {
             @RequestBody @Valid UpdateCommentDto updateCommentDto
     ) {
         log.info("[PATCH /users/{}/comments/{}] обновление комментария {}", userId, commentId, updateCommentDto);
-        // TODO
-        return null;
+        return service.updateCommentByUser(userId, commentId, updateCommentDto);
     }
 
     /**
@@ -55,11 +56,11 @@ public class PrivateCommentController {
      */
     @DeleteMapping("/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(
+    public void deleteComment(
             @PathVariable(value = "userId") @Positive Long userId,
             @PathVariable @Positive Long commentId
     ) {
         log.info("[DELETE /users/{}/comments/{}] Удаление комментария пользователем", userId, commentId);
-        // TODO
+        service.deleteCommentByUser(userId, commentId);
     }
 }

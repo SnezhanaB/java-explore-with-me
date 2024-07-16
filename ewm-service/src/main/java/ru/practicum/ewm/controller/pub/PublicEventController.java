@@ -100,7 +100,6 @@ public class PublicEventController {
             @RequestParam(value = "size", defaultValue = "10")
             @Positive Integer size) {
         log.info("[GET /events/{}/comments] Получение комментариев к событию", eventId);
-        // TODO
-        return List.of();
+        return service.getEventComments(eventId, from, size);
     }
 }
