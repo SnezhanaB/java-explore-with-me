@@ -21,6 +21,7 @@
 									"script": {
 										"exec": [
 											"\r",
+											"const target = pm.response.json();",
 											"pm.test(\"Комментарий должен содержать поля: id, created, text, author\", function () {\r",
 											"    pm.expect(target).to.have.property('id');\r",
 											"    pm.expect(target).to.have.property('text');\r",
@@ -46,9 +47,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/users/:userId/comments",
+									"raw": "{{baseUrl}}/users/:userId/comments",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"users",
@@ -73,6 +74,7 @@
 									"script": {
 										"exec": [
 											"\r",
+											"const target = pm.response.json();",
 											"pm.test(\"Комментарий должен содержать поля: id, created, text, author\", function () {\r",
 											"    pm.expect(target).to.have.property('id');\r",
 											"    pm.expect(target).to.have.property('text');\r",
@@ -98,9 +100,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/users/:userId/comments",
+									"raw": "{{baseUrl}}/users/:userId/comments",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"users",
@@ -125,6 +127,7 @@
 									"script": {
 										"exec": [
 											"\r",
+											"const target = pm.response.json();",
 											"pm.test(\"Комментарий должен содержать поля: id, created, text, author\", function () {\r",
 											"    pm.expect(target).to.have.property('id');\r",
 											"    pm.expect(target).to.have.property('text');\r",
@@ -150,9 +153,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/users/:userId/comments",
+									"raw": "{{baseUrl}}/users/:userId/comments",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"users",
@@ -177,6 +180,7 @@
 									"script": {
 										"exec": [
 											"\r",
+											"const target = pm.response.json();",
 											"pm.test(\"Комментарий должен содержать поля: id, created, text, author\", function () {\r",
 											"    pm.expect(target).to.have.property('id');\r",
 											"    pm.expect(target).to.have.property('text');\r",
@@ -202,9 +206,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/users/:userId/comments/:commentId",
+									"raw": "{{baseUrl}}/users/:userId/comments/:commentId",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"users",
@@ -248,9 +252,9 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/users/:userId/comments/:commentId",
+									"raw": "{{baseUrl}}/users/:userId/comments/:commentId",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"users",
@@ -309,9 +313,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/users/:userId/comments/:commentId",
+									"raw": "{{baseUrl}}/users/:userId/comments/:commentId",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"users",
@@ -366,9 +370,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/users/:userId/comments/:commentId",
+									"raw": "{{baseUrl}}/users/:userId/comments/:commentId",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"users",
@@ -423,9 +427,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/users/:userId/comments/:commentId",
+									"raw": "{{baseUrl}}/users/:userId/comments/:commentId",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"users",
@@ -545,9 +549,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/users/:userId/comments/:commentId",
+									"raw": "{{baseUrl}}/users/:userId/comments/:commentId",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"users",
@@ -605,9 +609,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/events/:eventId/comments?from=0&size=10",
+									"raw": "{{baseUrl}}/events/:eventId/comments?from=0&size=10",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"events",
@@ -655,9 +659,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/events/:eventId/comments?from=0&size=10",
+									"raw": "{{baseUrl}}/events/:eventId/comments?from=0&size=10",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"events",
@@ -712,9 +716,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/events/:eventId/comments?from=-1&size=-2",
+									"raw": "{{baseUrl}}/events/:eventId/comments?from=-1&size=-2",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"events",
@@ -769,9 +773,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/events/:eventId/comments?from=0&size=10",
+									"raw": "{{baseUrl}}/events/:eventId/comments?from=0&size=10",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"events",
@@ -841,9 +845,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/admin/comments/:commentId",
+									"raw": "{{baseUrl}}/admin/comments/:commentId",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"admin",
@@ -893,9 +897,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/admin/comments/:commentId",
+									"raw": "{{baseUrl}}/admin/comments/:commentId",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"admin",
@@ -949,9 +953,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/admin/comments/:commentId",
+									"raw": "{{baseUrl}}/admin/comments/:commentId",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"admin",
@@ -1000,9 +1004,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/admin/comments/:commentId",
+									"raw": "{{baseUrl}}/admin/comments/:commentId",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"admin",
@@ -1062,9 +1066,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/admin/comments?from=0&size=10",
+									"raw": "{{baseUrl}}/admin/comments?from=0&size=10",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"admin",
@@ -1121,9 +1125,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/admin/comments?from=0&size=10&eventId=2",
+									"raw": "{{baseUrl}}/admin/comments?from=0&size=10&eventId=2",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"admin",
@@ -1178,9 +1182,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/admin/comments?from=0&size=10&eventId=1",
+									"raw": "{{baseUrl}}/admin/comments?from=0&size=10&eventId=1",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"admin",
@@ -1235,9 +1239,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/admin/comments?from=0&size=10&text=sEaRcH",
+									"raw": "{{baseUrl}}/admin/comments?from=0&size=10&text=sEaRcH",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"admin",
@@ -1291,9 +1295,9 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{base_url}}/admin/comments?from=0&size=10&text=cannotfind",
+									"raw": "{{baseUrl}}/admin/comments?from=0&size=10&text=cannotfind",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"admin",
@@ -1325,6 +1329,7 @@
 									"script": {
 										"exec": [
 											"",
+											"const target = pm.response.json();",
 											"pm.test(\"Комментарий должен содержать поля: id, created, text, author\", function () {",
 											"    pm.expect(target).to.have.property('id');",
 											"    pm.expect(target).to.have.property('text');",
@@ -1351,9 +1356,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/admin/comments/:commentId",
+									"raw": "{{baseUrl}}/admin/comments/:commentId",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"admin",
@@ -1402,9 +1407,9 @@
 									}
 								},
 								"url": {
-									"raw": "{{base_url}}/admin/comments/:commentId",
+									"raw": "{{baseUrl}}/admin/comments/:commentId",
 									"host": [
-										"{{base_url}}"
+										"{{baseUrl}}"
 									],
 									"path": [
 										"admin",
@@ -1449,7 +1454,7 @@
 	],
 	"variable": [
 		{
-			"key": "base_url",
+			"key": "baseUrl",
 			"value": "http://localhost:8080"
 		}
 	]
