@@ -14,5 +14,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "from comments as c " +
             "where lower(c.text) like lower(concat('%', ?1, '%') ) and c.eventId in ?2")
     Page<Comment> search(String text, List<Long> eventIds, Pageable pageable);
+
     Page<Comment> findAllByEventId(Long eventId, Pageable pageable);
 }
