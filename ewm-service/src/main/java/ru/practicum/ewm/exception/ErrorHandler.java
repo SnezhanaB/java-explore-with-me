@@ -30,7 +30,11 @@ public class ErrorHandler {
     }
 
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, InvalidParametersException.class, MethodArgumentTypeMismatchException.class,
+    @ExceptionHandler({
+            ConstraintViolationException.class,
+            MethodArgumentNotValidException.class,
+            InvalidParametersException.class,
+            MethodArgumentTypeMismatchException.class,
             MissingServletRequestParameterException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handlerIncorrectParametersException(Exception e) {
@@ -43,7 +47,6 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler({
-            ConstraintViolationException.class,
             PSQLException.class,
             ConflictException.class,
             DataIntegrityViolationException.class})
