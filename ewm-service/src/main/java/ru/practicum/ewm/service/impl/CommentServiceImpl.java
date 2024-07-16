@@ -2,6 +2,8 @@ package ru.practicum.ewm.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.AdminCommentDto;
 import ru.practicum.ewm.dto.CommentDto;
@@ -17,8 +19,10 @@ import ru.practicum.ewm.repository.CommentRepository;
 import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.repository.UserRepository;
 import ru.practicum.ewm.service.CommentService;
+import ru.practicum.ewm.utils.ChunkRequest;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -109,8 +113,17 @@ public class CommentServiceImpl implements CommentService {
      * @return список комментариев, сначала новые
      */
     @Override
-    public List<AdminCommentDto> searchCommentsByAdmin(Integer from, Integer size, Integer eventId, String text) {
-        return List.of();
+    public List<AdminCommentDto> searchCommentsByAdmin(Integer from, Integer size, Long eventId, String text) {
+        List<Long> eventIds = new ArrayList<>();
+        if (eventId != null) {
+            eventIds.add(eventId);
+        }
+        if (text == null) {
+            text = "";
+        }
+        Pageable page = new ChunkRequest(from, size, Sort.by(Sort.Direction.DESC, "created"));
+
+        return repository.search(text, eventIds, page).map(this::toAdminDto).toList();
     }
 
     /**

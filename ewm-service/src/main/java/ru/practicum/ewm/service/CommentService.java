@@ -44,7 +44,7 @@ public interface CommentService {
     List<AdminCommentDto> searchCommentsByAdmin(
             Integer from,
             Integer size,
-            Integer eventId,
+            Long eventId,
             String text
     );
 
