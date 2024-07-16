@@ -24,8 +24,7 @@
 											"pm.test(\"Комментарий должен содержать поля: id, created, text, author\", function () {\r",
 											"    pm.expect(target).to.have.property('id');\r",
 											"    pm.expect(target).to.have.property('text');\r",
-											"    pm.expect(target).to.have.property('author.id');\r",
-											"    pm.expect(target).to.have.property('author.name');\r",
+											"    pm.expect(target).to.have.property('author');\r",
 											"    pm.expect(target).to.have.property('created');\r",
 											"});"
 										],
@@ -77,8 +76,7 @@
 											"pm.test(\"Комментарий должен содержать поля: id, created, text, author\", function () {\r",
 											"    pm.expect(target).to.have.property('id');\r",
 											"    pm.expect(target).to.have.property('text');\r",
-											"    pm.expect(target).to.have.property('author.id');\r",
-											"    pm.expect(target).to.have.property('author.name');\r",
+											"    pm.expect(target).to.have.property('author');\r",
 											"    pm.expect(target).to.have.property('created');\r",
 											"});"
 										],
@@ -130,8 +128,7 @@
 											"pm.test(\"Комментарий должен содержать поля: id, created, text, author\", function () {\r",
 											"    pm.expect(target).to.have.property('id');\r",
 											"    pm.expect(target).to.have.property('text');\r",
-											"    pm.expect(target).to.have.property('author.id');\r",
-											"    pm.expect(target).to.have.property('author.name');\r",
+											"    pm.expect(target).to.have.property('author');\r",
 											"    pm.expect(target).to.have.property('created');\r",
 											"});"
 										],
@@ -183,8 +180,7 @@
 											"pm.test(\"Комментарий должен содержать поля: id, created, text, author\", function () {\r",
 											"    pm.expect(target).to.have.property('id');\r",
 											"    pm.expect(target).to.have.property('text');\r",
-											"    pm.expect(target).to.have.property('author.id');\r",
-											"    pm.expect(target).to.have.property('author.name');\r",
+											"    pm.expect(target).to.have.property('author');\r",
 											"    pm.expect(target).to.have.property('created');\r",
 											"});"
 										],
@@ -1053,8 +1049,7 @@
 											"    pm.expect(target[0]).to.have.property('id');\r",
 											"    pm.expect(target[0]).to.have.property('eventId');\r",
 											"    pm.expect(target[0]).to.have.property('text');\r",
-											"    pm.expect(target[0]).to.have.property('author.id');\r",
-											"    pm.expect(target[0]).to.have.property('author.name');\r",
+											"    pm.expect(target[0]).to.have.property('author');\r",
 											"    pm.expect(target[0]).to.have.property('created');\r",
 											"});"
 										],
@@ -1113,8 +1108,7 @@
 											"    pm.expect(target[0]).to.have.property('id');\r",
 											"    pm.expect(target[0]).to.have.property('eventId');\r",
 											"    pm.expect(target[0]).to.have.property('text');\r",
-											"    pm.expect(target[0]).to.have.property('author.id');\r",
-											"    pm.expect(target[0]).to.have.property('author.name');\r",
+											"    pm.expect(target[0]).to.have.property('author');\r",
 											"    pm.expect(target[0]).to.have.property('created');\r",
 											"});"
 										],
@@ -1334,8 +1328,7 @@
 											"pm.test(\"Комментарий должен содержать поля: id, created, text, author\", function () {",
 											"    pm.expect(target).to.have.property('id');",
 											"    pm.expect(target).to.have.property('text');",
-											"    pm.expect(target).to.have.property('author.id');",
-											"    pm.expect(target).to.have.property('author.name');",
+											"    pm.expect(target).to.have.property('author');",
 											"    pm.expect(target).to.have.property('created');",
 											"});",
 											""
