@@ -285,7 +285,7 @@
 									"script": {
 										"exec": [
 											"pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {",
-											"    pm.response.to.have.status(400);   ",
+											"    pm.response.to.have.status(409);   ",
 											"    pm.response.to.be.withBody;",
 											"    pm.response.to.be.json;",
 											"});",
@@ -341,8 +341,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {",
-											"    pm.response.to.have.status(400);   ",
+											"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {",
+											"    pm.response.to.have.status(409);   ",
 											"    pm.response.to.be.withBody;",
 											"    pm.response.to.be.json;",
 											"});",
@@ -398,8 +398,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {",
-											"    pm.response.to.have.status(400);   ",
+											"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {",
+											"    pm.response.to.have.status(409);   ",
 											"    pm.response.to.be.withBody;",
 											"    pm.response.to.be.json;",
 											"});",
@@ -465,8 +465,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {\r",
-											"    pm.response.to.have.status(400);   \r",
+											"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {\r",
+											"    pm.response.to.have.status(409);   \r",
 											"    pm.response.to.be.withBody;\r",
 											"    pm.response.to.be.json;\r",
 											"});\r",
@@ -697,8 +697,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {",
-											"    pm.response.to.have.status(400);   ",
+											"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {",
+											"    pm.response.to.have.status(409);   ",
 											"    pm.response.to.be.withBody;",
 											"    pm.response.to.be.json;",
 											"});"
@@ -816,8 +816,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {",
-											"    pm.response.to.have.status(400);   ",
+											"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {",
+											"    pm.response.to.have.status(409);   ",
 											"    pm.response.to.be.withBody;",
 											"    pm.response.to.be.json;",
 											"});",
@@ -868,8 +868,8 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Ответ должен содержать код статуса 400 и данные в формате json\", function () {",
-											"    pm.response.to.have.status(400);   ",
+											"pm.test(\"Ответ должен содержать код статуса 409 и данные в формате json\", function () {",
+											"    pm.response.to.have.status(409);   ",
 											"    pm.response.to.be.withBody;",
 											"    pm.response.to.be.json;",
 											"});",
