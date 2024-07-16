@@ -12,6 +12,7 @@ import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.model.Comment;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.User;
+import ru.practicum.ewm.model.enums.EventStatus;
 import ru.practicum.ewm.repository.CommentRepository;
 import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.repository.UserRepository;
@@ -40,6 +41,10 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto addCommentByUser(Long userId, NewCommentDto commentDto) {
         User author = getUserById(userId);
         Event event = getEventById(commentDto.getEventId());
+
+        if (event.getEventStatus() != EventStatus.PUBLISHED) {
+            throw new ConflictException("You can add comment only to published events");
+        }
 
         Comment comment = Comment.builder()
                 .author(author)
