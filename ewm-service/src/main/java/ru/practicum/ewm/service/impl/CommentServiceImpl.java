@@ -118,9 +118,6 @@ public class CommentServiceImpl implements CommentService {
         if (eventId != null) {
             eventIds.add(eventId);
         }
-        if (text == null) {
-            text = "";
-        }
         Pageable page = new ChunkRequest(from, size, Sort.by(Sort.Direction.DESC, "created"));
 
         return repository.search(text, eventIds, page).map(this::toAdminDto).toList();

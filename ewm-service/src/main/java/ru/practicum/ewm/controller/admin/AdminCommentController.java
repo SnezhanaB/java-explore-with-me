@@ -38,7 +38,7 @@ public class AdminCommentController {
             @RequestParam(value = "size", defaultValue = "10")
             @Positive Integer size,
             @Positive Long eventId,
-            @RequestParam(name = "text") String text
+            @RequestParam(name = "text", defaultValue = "") String text
     ) {
         log.info("[POST /admin/comments] Получение администратором последних опубликованных комментариев");
         return service.searchCommentsByAdmin(from, size, eventId, text);
