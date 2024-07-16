@@ -23,14 +23,18 @@ public class AdminCommentController {
      * Получение администратором последних опубликованных комментариев постранично
      * @param from количество элементов, которые нужно пропустить для формирования текущего набора
      * @param size количество элементов в наборе
+     * @param eventId поиск по событию
+     * @param text поиск по тексту комментария
      * @return список комментариев, сначала новые
      */
     @GetMapping
-    public AdminCommentDto getComments(
+    public AdminCommentDto searchComments(
             @RequestParam(value = "from", defaultValue = "0")
             @PositiveOrZero Integer from,
             @RequestParam(value = "size", defaultValue = "10")
-            @Positive Integer size
+            @Positive Integer size,
+            @Positive Integer eventId,
+            @RequestParam String text
     ) {
         log.info("[POST /admin/comments] Получение администратором последних опубликованных комментариев");
         // TODO

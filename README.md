@@ -1,5 +1,7 @@
 # java-Explore-With-Me
 
+https://github.com/SnezhanaB/java-explore-with-me/pull/3
+
 ## Запустить EWM app с помощью docker-compose
 
 1. docker-compose down
