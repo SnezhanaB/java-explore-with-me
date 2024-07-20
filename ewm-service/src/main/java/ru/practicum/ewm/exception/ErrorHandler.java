@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.validation.ConstraintViolationException;
+
 
 @RestControllerAdvice
 @Slf4j
@@ -28,7 +30,11 @@ public class ErrorHandler {
     }
 
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, InvalidParametersException.class, MethodArgumentTypeMismatchException.class,
+    @ExceptionHandler({
+            ConstraintViolationException.class,
+            MethodArgumentNotValidException.class,
+            InvalidParametersException.class,
+            MethodArgumentTypeMismatchException.class,
             MissingServletRequestParameterException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handlerIncorrectParametersException(Exception e) {
@@ -40,7 +46,10 @@ public class ErrorHandler {
                 .build();
     }
 
-    @ExceptionHandler({PSQLException.class, ConflictException.class, DataIntegrityViolationException.class})
+    @ExceptionHandler({
+            PSQLException.class,
+            ConflictException.class,
+            DataIntegrityViolationException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handlerValidationException(Exception e) {
         log.debug("[Status code 409 CONFLICT] {}", e.getMessage());

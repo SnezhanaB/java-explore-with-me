@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class EventServiceImpl implements EventService {
     private final EventRepository repository;
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
     private final ModelMapper mapper;
@@ -465,6 +467,15 @@ public class EventServiceImpl implements EventService {
         return dto;
     }
 
+    @Override
+    public List<CommentDto> getEventComments(Long eventId, Integer from, Integer size) {
+        Pageable page = new ChunkRequest(from, size, Sort.by(Sort.Direction.DESC, "created"));
+        getEventById(eventId);
+
+        return commentRepository.findAllByEventId(eventId, page)
+                .map(this::toCommentDto).toList();
+    }
+
     private void addRequestToStats(HttpServletRequest request) {
         statsClient.addHit(EndpointHitDto.builder()
                 .app(applicationName)
@@ -588,6 +599,10 @@ public class EventServiceImpl implements EventService {
 
     EventShortDto toShortDto(Event event) {
         return mapper.map(event, EventShortDto.class);
+    }
+
+    CommentDto toCommentDto(Comment comment) {
+        return mapper.map(comment, CommentDto.class);
     }
 
     ParticipationRequestDto requestToDto(Request request) {

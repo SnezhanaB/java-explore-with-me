@@ -145,4 +145,14 @@ public interface EventService {
      * В случае, если события с заданным id не найдено, возвращает статус код 404
      */
     EventFullDto getEventById(Long eventId, HttpServletRequest request);
+
+    /**
+     * Получить комментарии к событию
+     * @param eventId идентификатор события
+     * @param from количество элементов, которые нужно пропустить для формирования текущего набора
+     * @param size количество элементов в наборе
+     * @return отсортированный по дате добавления список комментариев, сначала новые
+     */
+    List<CommentDto> getEventComments(Long eventId, Integer from, Integer size);
+
 }
